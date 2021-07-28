@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  client:
+    working_dir: /app
+    build:
+      context: ./backend
+      dockerfile: "Dockerfile.dev"
+    volumes:
+      - ./backend:/app
+      - /root/.cache
+    ports:
+      - "9000:9000"
+  server:
+    working_dir: /app
+    build:
+      context: ./frontend
+      dockerfile: "Dockerfile.dev"
+    volumes:
+      - ./frontend:/app
+      - /root/.cache
+    ports:
+        - "9001:9001"

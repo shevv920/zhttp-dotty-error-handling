@@ -1,15 +1,14 @@
 val zioVersion = "1.0.9"
 
-lazy val root = project
+lazy val backend = project
   .in(file("."))
   .settings(
     inThisBuild(
       List(
-        name := "zio-dotty-quickstart",
+        name := "backend",
         organization := "com.example",
         version := "0.0.1",
         scalaVersion := "3.0.1",
-
       )
     ),
     libraryDependencies ++= Seq(
