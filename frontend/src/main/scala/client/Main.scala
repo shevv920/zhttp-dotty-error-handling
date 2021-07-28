@@ -15,7 +15,7 @@ object Main:
     val resContainer = pre(
       child <-- responsesStream.map(_.data)
     )
-    val s = Fetch.get("https://wttr.in/Minsk?format=j1").text
+    val s = Fetch.get("https://wttr.in/Minsk?format=j2").text
     val rootElement =
       div(
         button(
