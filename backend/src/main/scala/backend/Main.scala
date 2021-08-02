@@ -1,4 +1,6 @@
-package com.example
+package backend
+
+import common.Common.commonValue
 
 import java.io.IOException
 import zio.{ App, ExitCode, Schedule, URIO, ZEnv, ZIO }
@@ -10,13 +12,14 @@ import zio.duration._
 import zhttp.http._
 import zhttp.service.Server
 
-
 object Main extends App:
 
   val app = Http.collectM[Request] {
-    case Method.GET -> Root / "health" => putStrLn("health check ok") *> ZIO.succeed(Response.text("ok"))
-    case Method.GET -> Root => ZIO.succeed(Response.text("root"))
+    case Method.GET -> Root / "health" =>
+      putStrLn("health check ok") *> ZIO.succeed(Response.text("ok"))
+    case Method.GET -> Root =>
+      ZIO.succeed(Response.text(commonValue.toString))
   }
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
-    Server.start(9000, app).exitCode
+    Server.start(9000, CORS(app)).exitCode

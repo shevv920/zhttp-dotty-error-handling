@@ -10,17 +10,18 @@ import scala.util.{ Failure, Success }
 object Main:
   def main(args: Array[String]): Unit =
 
-    val fetchResultVar = Var[Option[String]](None)
+    val fetchResultVar                      = Var[Option[String]](None)
     val (responsesStream, responseReceived) = EventStream.withCallback[FetchResponse[String]]
     val resContainer = pre(
-      child <-- responsesStream.map(_.data)
+      child <-- responsesStream.map(_.data),
     )
-    val s = Fetch.get("https://wttr.in/Minsk?format=j1").text
+    val s = Fetch.get("http://localhost:9000/").text
     val rootElement =
       div(
+        div(s"below button should appear text: ${common.Common.commonValue.toString}"),
         button(
           "toggle",
-          thisEvents(onClick).flatMap(_ => s) --> responseReceived
+          thisEvents(onClick).flatMap(_ => s) --> responseReceived,
         ),
         resContainer,
       )
