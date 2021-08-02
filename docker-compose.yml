@@ -20,7 +20,7 @@ services:
     depends_on:
       - frontend
     ports:
-      - "80:80"
+      - "9001:80"
   backend:
     working_dir: /app
     image: hseeberger/scala-sbt:graalvm-ce-21.2.0-java11_1.5.5_3.0.1
