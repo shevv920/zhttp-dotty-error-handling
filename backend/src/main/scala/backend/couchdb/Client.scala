@@ -9,12 +9,18 @@ object SimpleClient {
   val sessionUrl = s"${basicUrl}_session/"
   val body = """{ "name": "admin", "password": "password" }"""
 
-  val request = basicRequest.contentType("application/json").post(uri"$sessionUrl").body(body).response(asStringAlways)
+  val request = basicRequest
+    .contentType("application/json")
+    .post(uri"$sessionUrl")
+    .body(body)
+    .response(asStringAlways)
 
   val program: ZIO[zio.ZEnv, Throwable, String] =
     for
       backend <- HttpClientZioBackend()
       res     <- request.send(backend).either.absolve
-    yield  res.body
+      cookies = res.unsafeCookies
+      res2    <- basicRequest.cookies(cookies).get(uri"${basicUrl}_all_dbs").response(asStringAlways).send(backend).either.absolve
+    yield  res2.body
 
 }
