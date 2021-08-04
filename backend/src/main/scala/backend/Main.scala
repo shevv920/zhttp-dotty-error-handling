@@ -24,6 +24,8 @@ object Main extends App:
       for
         resp <- SimpleClient.program
       yield Response.text(resp.toString)
+    case req =>
+      ZIO.succeed(Response.text(req.getBodyAsString.get))
   }
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
