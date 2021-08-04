@@ -21,12 +21,21 @@ services:
       - frontend
     ports:
       - "9001:80"
+  couchdb:
+    working_dir: /db
+    image: couchdb:latest
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    ports:
+      - "5984:5984"
   backend:
     working_dir: /app
     image: hseeberger/scala-sbt:graalvm-ce-21.2.0-java11_1.5.5_3.0.1
     entrypoint: sbt "~backend/reStart"
     depends_on:
       - frontend-server
+      - couchdb
     volumes:
       - ./backend:/app/backend
       - ./common:/app/common

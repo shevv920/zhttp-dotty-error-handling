@@ -949,7 +949,6 @@ function $h_Lclient_Main$() {
 }
 $h_Lclient_Main$.prototype = $c_Lclient_Main$.prototype;
 $c_Lclient_Main$.prototype.main__AT__V = (function(args) {
-  $m_Lcom_raquo_laminar_api_package$().Lcom_raquo_laminar_api_package$__f_L.Lcom_raquo_laminar_api_Laminar$__f_Var.apply__O__Lcom_raquo_airstream_state_Var($m_s_None$());
   matchResult1: {
     var \u03b41$___1;
     var \u03b41$___2;
@@ -1209,9 +1208,6 @@ function $h_Lcom_raquo_airstream_core_Observer$() {
 $h_Lcom_raquo_airstream_core_Observer$.prototype = $c_Lcom_raquo_airstream_core_Observer$.prototype;
 $c_Lcom_raquo_airstream_core_Observer$.prototype.withRecover__F1__s_PartialFunction__Z__Lcom_raquo_airstream_core_Observer = (function(onNext, onError, handleObserverErrors) {
   return new $c_Lcom_raquo_airstream_core_Observer$$anon$8(handleObserverErrors, onNext, onError)
-});
-$c_Lcom_raquo_airstream_core_Observer$.prototype.fromTry__s_PartialFunction__Z__Lcom_raquo_airstream_core_Observer = (function(onTry, handleObserverErrors) {
-  return new $c_Lcom_raquo_airstream_core_Observer$$anon$9(handleObserverErrors, onTry)
 });
 var $d_Lcom_raquo_airstream_core_Observer$ = new $TypeData().initClass({
   Lcom_raquo_airstream_core_Observer$: 0
@@ -2094,10 +2090,6 @@ function $h_Lcom_raquo_airstream_state_Var$() {
   /*<skip>*/
 }
 $h_Lcom_raquo_airstream_state_Var$.prototype = $c_Lcom_raquo_airstream_state_Var$.prototype;
-$c_Lcom_raquo_airstream_state_Var$.prototype.apply__O__Lcom_raquo_airstream_state_Var = (function(initial) {
-  var initial$1 = new $c_s_util_Success(initial);
-  return new $c_Lcom_raquo_airstream_state_SourceVar(initial$1)
-});
 var $d_Lcom_raquo_airstream_state_Var$ = new $TypeData().initClass({
   Lcom_raquo_airstream_state_Var$: 0
 }, false, "com.raquo.airstream.state.Var$", {
@@ -12263,7 +12255,8 @@ $c_sr_AbstractPartialFunction.prototype.toString__T = (function() {
   return "<function1>"
 });
 $c_sr_AbstractPartialFunction.prototype.apply__O__O = (function(x) {
-  return this.applyOrElse__O__F1__O(x, $m_s_PartialFunction$().s_PartialFunction$__f_empty_pf)
+  var default$1 = $m_s_PartialFunction$().s_PartialFunction$__f_empty_pf;
+  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), default$1)
 });
 $c_sr_AbstractPartialFunction.prototype.andThen__F1__F1 = (function(g) {
   return $f_s_PartialFunction__andThen__F1__s_PartialFunction(this, g)
@@ -12518,73 +12511,6 @@ var $d_Lcom_raquo_airstream_core_Observer$$anon$8 = new $TypeData().initClass({
   Lcom_raquo_airstream_core_Observer: 1
 });
 $c_Lcom_raquo_airstream_core_Observer$$anon$8.prototype.$classData = $d_Lcom_raquo_airstream_core_Observer$$anon$8;
-/** @constructor */
-function $c_Lcom_raquo_airstream_core_Observer$$anon$9(handleObserverErrors$4, onTryParam$2) {
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_handleObserverErrors$1 = false;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_onTryParam$1 = null;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_maybeDisplayName = null;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_toJsFn1$lzy2 = null;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_toJsFn1bitmap$2 = false;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_handleObserverErrors$1 = handleObserverErrors$4;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_onTryParam$1 = onTryParam$2;
-  this.Lcom_raquo_airstream_core_Observer$$anon$9__f_maybeDisplayName = (void 0)
-}
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype = new $h_O();
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.constructor = $c_Lcom_raquo_airstream_core_Observer$$anon$9;
-/** @constructor */
-function $h_Lcom_raquo_airstream_core_Observer$$anon$9() {
-  /*<skip>*/
-}
-$h_Lcom_raquo_airstream_core_Observer$$anon$9.prototype = $c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype;
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.maybeDisplayName__O = (function() {
-  return this.Lcom_raquo_airstream_core_Observer$$anon$9__f_maybeDisplayName
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.toString__T = (function() {
-  return $f_Lcom_raquo_airstream_core_Named__displayName__T(this)
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.toObserver__Lcom_raquo_airstream_core_Observer = (function() {
-  return this
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.onNext__O__V = (function(nextValue) {
-  this.onTry__s_util_Try__V(new $c_s_util_Success(nextValue))
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.onError__jl_Throwable__V = (function(error) {
-  this.onTry__s_util_Try__V(new $c_s_util_Failure(error))
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.onTry__s_util_Try__V = (function(nextValue) {
-  try {
-    if (this.Lcom_raquo_airstream_core_Observer$$anon$9__f_onTryParam$1.isDefinedAt__O__Z(nextValue)) {
-      this.Lcom_raquo_airstream_core_Observer$$anon$9__f_onTryParam$1.apply__O__O(nextValue)
-    } else {
-      nextValue.fold__F1__F1__O(new $c_sjsr_AnonFunction1(((err) => {
-        var err$1 = $as_jl_Throwable(err);
-        $m_Lcom_raquo_airstream_core_AirstreamError$().sendUnhandledError__jl_Throwable__V(err$1)
-      })), new $c_sjsr_AnonFunction1(((_$2) => (void 0))))
-    }
-  } catch (e) {
-    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
-    if ((this.Lcom_raquo_airstream_core_Observer$$anon$9__f_handleObserverErrors$1 && nextValue.isSuccess__Z())) {
-      this.onError__jl_Throwable__V(new $c_Lcom_raquo_airstream_core_AirstreamError$ObserverError(e$2))
-    } else {
-      nextValue.fold__F1__F1__O(new $c_sjsr_AnonFunction1(((err$3) => ((originalError) => {
-        var originalError$1 = $as_jl_Throwable(originalError);
-        $m_Lcom_raquo_airstream_core_AirstreamError$().sendUnhandledError__jl_Throwable__V(new $c_Lcom_raquo_airstream_core_AirstreamError$ObserverErrorHandlingError(err$3, originalError$1))
-      }))(e$2)), new $c_sjsr_AnonFunction1(((err$4) => ((_$3) => {
-        $m_Lcom_raquo_airstream_core_AirstreamError$().sendUnhandledError__jl_Throwable__V(new $c_Lcom_raquo_airstream_core_AirstreamError$ObserverError(err$4))
-      }))(e$2)))
-    }
-  }
-});
-var $d_Lcom_raquo_airstream_core_Observer$$anon$9 = new $TypeData().initClass({
-  Lcom_raquo_airstream_core_Observer$$anon$9: 0
-}, false, "com.raquo.airstream.core.Observer$$anon$9", {
-  Lcom_raquo_airstream_core_Observer$$anon$9: 1,
-  O: 1,
-  Lcom_raquo_airstream_core_Sink: 1,
-  Lcom_raquo_airstream_core_Named: 1,
-  Lcom_raquo_airstream_core_Observer: 1
-});
-$c_Lcom_raquo_airstream_core_Observer$$anon$9.prototype.$classData = $d_Lcom_raquo_airstream_core_Observer$$anon$9;
 /** @constructor */
 function $c_Lcom_raquo_airstream_eventbus_WriteBus() {
   this.Lcom_raquo_airstream_eventbus_WriteBus__f_maybeDisplayName = null;
@@ -14390,50 +14316,6 @@ var $d_Lcom_raquo_airstream_eventbus_EventBus = new $TypeData().initClass({
   Lcom_raquo_airstream_core_Named: 1
 });
 $c_Lcom_raquo_airstream_eventbus_EventBus.prototype.$classData = $d_Lcom_raquo_airstream_eventbus_EventBus;
-function $f_Lcom_raquo_airstream_state_Var__$init$__V($thiz) {
-  $thiz.Lcom_raquo_airstream_state_SourceVar__f_writer = $m_Lcom_raquo_airstream_core_Observer$().fromTry__s_PartialFunction__Z__Lcom_raquo_airstream_core_Observer(new $c_Lcom_raquo_airstream_state_Var$$anon$1($thiz), ($m_Lcom_raquo_airstream_core_Observer$(), true))
-}
-/** @constructor */
-function $c_Lcom_raquo_airstream_state_Var$$anon$1(outer) {
-  this.Lcom_raquo_airstream_state_Var$$anon$1__f_$outer = null;
-  if ((outer === null)) {
-    throw $ct_jl_NullPointerException__(new $c_jl_NullPointerException())
-  };
-  this.Lcom_raquo_airstream_state_Var$$anon$1__f_$outer = outer
-}
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype = new $h_sr_AbstractPartialFunction();
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.constructor = $c_Lcom_raquo_airstream_state_Var$$anon$1;
-/** @constructor */
-function $h_Lcom_raquo_airstream_state_Var$$anon$1() {
-  /*<skip>*/
-}
-$h_Lcom_raquo_airstream_state_Var$$anon$1.prototype = $c_Lcom_raquo_airstream_state_Var$$anon$1.prototype;
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.isDefinedAt__s_util_Try__Z = (function(x) {
-  return true
-});
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.applyOrElse__s_util_Try__F1__O = (function(x, default$1) {
-  new $c_Lcom_raquo_airstream_core_Transaction(new $c_sjsr_AnonFunction1(((this$1, nextTry$2) => ((_$1) => {
-    var _$1$1 = $as_Lcom_raquo_airstream_core_Transaction(_$1);
-    this$1.Lcom_raquo_airstream_state_Var$$anon$1__f_$outer.setCurrentValue__s_util_Try__Lcom_raquo_airstream_core_Transaction__V(nextTry$2, _$1$1)
-  }))(this, x)))
-});
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.isDefinedAt__O__Z = (function(x) {
-  return this.isDefinedAt__s_util_Try__Z($as_s_util_Try(x))
-});
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.applyOrElse__O__F1__O = (function(x, default$1) {
-  return this.applyOrElse__s_util_Try__F1__O($as_s_util_Try(x), default$1)
-});
-var $d_Lcom_raquo_airstream_state_Var$$anon$1 = new $TypeData().initClass({
-  Lcom_raquo_airstream_state_Var$$anon$1: 0
-}, false, "com.raquo.airstream.state.Var$$anon$1", {
-  Lcom_raquo_airstream_state_Var$$anon$1: 1,
-  sr_AbstractPartialFunction: 1,
-  O: 1,
-  F1: 1,
-  s_PartialFunction: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_raquo_airstream_state_Var$$anon$1.prototype.$classData = $d_Lcom_raquo_airstream_state_Var$$anon$1;
 class $c_Lio_laminext_fetch_FetchException extends $c_jl_RuntimeException {
 }
 function $as_Lio_laminext_fetch_FetchException(obj) {
@@ -18217,10 +18099,10 @@ function $asArrayOf_Lcom_raquo_airstream_core_EventStream(obj, depth) {
   return (($isArrayOf_Lcom_raquo_airstream_core_EventStream(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.raquo.airstream.core.EventStream;", depth))
 }
 function $f_Lcom_raquo_airstream_core_Signal__onStart__V($thiz) {
-  $thiz.tryNow__s_util_Try()
+  $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try($thiz)
 }
 function $f_Lcom_raquo_airstream_core_Signal__onAddedExternalObserver__Lcom_raquo_airstream_core_Observer__V($thiz, observer) {
-  observer.onTry__s_util_Try__V($thiz.tryNow__s_util_Try())
+  observer.onTry__s_util_Try__V($f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try($thiz))
 }
 function $is_Lcom_raquo_airstream_core_Signal(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_raquo_airstream_core_Signal)))
@@ -18267,55 +18149,6 @@ function $f_Lcom_raquo_airstream_custom_CustomSource__onStart__V($thiz) {
 function $f_Lcom_raquo_airstream_custom_CustomSource__onStop__V($thiz) {
   $thiz.Lcom_raquo_airstream_custom_CustomStreamSource__f_config.Lcom_raquo_airstream_custom_CustomSource$Config__f_onStop.apply__O()
 }
-/** @constructor */
-function $c_Lcom_raquo_airstream_state_SourceVar(initial) {
-  this.Lcom_raquo_airstream_state_SourceVar__f_maybeDisplayName = null;
-  this.Lcom_raquo_airstream_state_SourceVar__f_writer = null;
-  this.Lcom_raquo_airstream_state_SourceVar__f_currentValue = null;
-  this.Lcom_raquo_airstream_state_SourceVar__f__varSignal = null;
-  this.Lcom_raquo_airstream_state_SourceVar__f_signal = null;
-  this.Lcom_raquo_airstream_state_SourceVar__f_maybeDisplayName = (void 0);
-  $f_Lcom_raquo_airstream_state_Var__$init$__V(this);
-  this.Lcom_raquo_airstream_state_SourceVar__f_currentValue = initial;
-  this.Lcom_raquo_airstream_state_SourceVar__f__varSignal = new $c_Lcom_raquo_airstream_state_VarSignal(this.Lcom_raquo_airstream_state_SourceVar__f_currentValue);
-  this.Lcom_raquo_airstream_state_SourceVar__f_signal = this.Lcom_raquo_airstream_state_SourceVar__f__varSignal
-}
-$c_Lcom_raquo_airstream_state_SourceVar.prototype = new $h_O();
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.constructor = $c_Lcom_raquo_airstream_state_SourceVar;
-/** @constructor */
-function $h_Lcom_raquo_airstream_state_SourceVar() {
-  /*<skip>*/
-}
-$h_Lcom_raquo_airstream_state_SourceVar.prototype = $c_Lcom_raquo_airstream_state_SourceVar.prototype;
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.maybeDisplayName__O = (function() {
-  return this.Lcom_raquo_airstream_state_SourceVar__f_maybeDisplayName
-});
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.toString__T = (function() {
-  return $f_Lcom_raquo_airstream_core_Named__displayName__T(this)
-});
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.toObserver__Lcom_raquo_airstream_core_Observer = (function() {
-  return this.Lcom_raquo_airstream_state_SourceVar__f_writer
-});
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.setCurrentValue__s_util_Try__Lcom_raquo_airstream_core_Transaction__V = (function(value, transaction) {
-  this.Lcom_raquo_airstream_state_SourceVar__f_currentValue = value;
-  var this$1 = this.Lcom_raquo_airstream_state_SourceVar__f__varSignal;
-  $f_Lcom_raquo_airstream_core_WritableSignal__fireTry__s_util_Try__Lcom_raquo_airstream_core_Transaction__V(this$1, value, transaction)
-});
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.toObservable__Lcom_raquo_airstream_core_Observable = (function() {
-  return this.Lcom_raquo_airstream_state_SourceVar__f_signal
-});
-var $d_Lcom_raquo_airstream_state_SourceVar = new $TypeData().initClass({
-  Lcom_raquo_airstream_state_SourceVar: 0
-}, false, "com.raquo.airstream.state.SourceVar", {
-  Lcom_raquo_airstream_state_SourceVar: 1,
-  O: 1,
-  Lcom_raquo_airstream_core_Source: 1,
-  Lcom_raquo_airstream_core_Source$SignalSource: 1,
-  Lcom_raquo_airstream_core_Sink: 1,
-  Lcom_raquo_airstream_core_Named: 1,
-  Lcom_raquo_airstream_state_Var: 1
-});
-$c_Lcom_raquo_airstream_state_SourceVar.prototype.$classData = $d_Lcom_raquo_airstream_state_SourceVar;
 /** @constructor */
 function $c_Lcom_raquo_laminar_nodes_CommentNode(text) {
   this.Lcom_raquo_laminar_nodes_CommentNode__f_com$raquo$laminar$nodes$ChildNode$$_maybeParent = null;
@@ -20474,10 +20307,10 @@ function $ps_Lcom_raquo_airstream_core_WritableEventStream__liftedTree1$1__O__Lc
   }
 }
 function $f_Lcom_raquo_airstream_core_WritableSignal__setCurrentValue__s_util_Try__V($thiz, newValue) {
-  $thiz.maybeLastSeenCurrentValue_$eq__O__V($m_sjs_js_defined$().apply__O__sjs_js_$bar(newValue))
+  $thiz.Lcom_raquo_airstream_flatten_SwitchSignal__f_maybeLastSeenCurrentValue = $m_sjs_js_defined$().apply__O__sjs_js_$bar(newValue)
 }
 function $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try($thiz) {
-  var x = $thiz.maybeLastSeenCurrentValue__O();
+  var x = $thiz.Lcom_raquo_airstream_flatten_SwitchSignal__f_maybeLastSeenCurrentValue;
   if ((x === (void 0))) {
     var currentValue = $thiz.initialValue__s_util_Try();
     $f_Lcom_raquo_airstream_core_WritableSignal__setCurrentValue__s_util_Try__V($thiz, currentValue);
@@ -20488,13 +20321,13 @@ function $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try($thiz) 
   return $as_s_util_Try($$x1)
 }
 function $f_Lcom_raquo_airstream_core_WritableSignal__fireTry__s_util_Try__Lcom_raquo_airstream_core_Transaction__V($thiz, nextValue, transaction) {
-  var x = $thiz.tryNow__s_util_Try();
+  var x = $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try($thiz);
   if ((!((x === null) ? (nextValue === null) : x.equals__O__Z(nextValue)))) {
     $f_Lcom_raquo_airstream_core_WritableSignal__setCurrentValue__s_util_Try__V($thiz, nextValue);
     var isError = nextValue.isFailure__Z();
     var elem = false;
     elem = false;
-    var this$ = $thiz.externalObservers__sjs_js_Array();
+    var this$ = $thiz.Lcom_raquo_airstream_flatten_SwitchSignal__f_externalObservers;
     var index = 0;
     while ((index < $uI(this$.length))) {
       var observer = this$[index];
@@ -20505,7 +20338,7 @@ function $f_Lcom_raquo_airstream_core_WritableSignal__fireTry__s_util_Try__Lcom_
         elem = true
       }
     };
-    var this$$1 = $thiz.internalObservers__sjs_js_Array();
+    var this$$1 = $thiz.Lcom_raquo_airstream_flatten_SwitchSignal__f_internalObservers;
     var index$1 = 0;
     while ((index$1 < $uI(this$$1.length))) {
       var observer$2 = this$$1[index$1];
@@ -21743,88 +21576,6 @@ var $d_Lcom_raquo_airstream_custom_CustomStreamSource = new $TypeData().initClas
   Lcom_raquo_airstream_custom_CustomSource: 1
 });
 $c_Lcom_raquo_airstream_custom_CustomStreamSource.prototype.$classData = $d_Lcom_raquo_airstream_custom_CustomStreamSource;
-/** @constructor */
-function $c_Lcom_raquo_airstream_state_VarSignal(initialValue) {
-  this.Lcom_raquo_airstream_state_VarSignal__f_maybeDisplayName = null;
-  this.Lcom_raquo_airstream_state_VarSignal__f_externalObservers = null;
-  this.Lcom_raquo_airstream_state_VarSignal__f_internalObservers = null;
-  this.Lcom_raquo_airstream_state_VarSignal__f_maybeLastSeenCurrentValue = null;
-  this.Lcom_raquo_airstream_state_VarSignal__f_initialValue = null;
-  this.Lcom_raquo_airstream_state_VarSignal__f_topoRank = 0;
-  this.Lcom_raquo_airstream_state_VarSignal__f_initialValue = initialValue;
-  this.Lcom_raquo_airstream_state_VarSignal__f_maybeDisplayName = (void 0);
-  $f_Lcom_raquo_airstream_core_WritableObservable__$init$__V(this);
-  this.Lcom_raquo_airstream_state_VarSignal__f_maybeLastSeenCurrentValue = (void 0);
-  this.Lcom_raquo_airstream_state_VarSignal__f_topoRank = 1
-}
-$c_Lcom_raquo_airstream_state_VarSignal.prototype = new $h_O();
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.constructor = $c_Lcom_raquo_airstream_state_VarSignal;
-/** @constructor */
-function $h_Lcom_raquo_airstream_state_VarSignal() {
-  /*<skip>*/
-}
-$h_Lcom_raquo_airstream_state_VarSignal.prototype = $c_Lcom_raquo_airstream_state_VarSignal.prototype;
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.maybeDisplayName__O = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_maybeDisplayName
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.toString__T = (function() {
-  return $f_Lcom_raquo_airstream_core_Named__displayName__T(this)
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.onStop__V = (function() {
-  /*<skip>*/
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.onStart__V = (function() {
-  $f_Lcom_raquo_airstream_core_Signal__onStart__V(this)
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.onAddedExternalObserver__Lcom_raquo_airstream_core_Observer__V = (function(observer) {
-  $f_Lcom_raquo_airstream_core_Signal__onAddedExternalObserver__Lcom_raquo_airstream_core_Observer__V(this, observer)
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.externalObservers__sjs_js_Array = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_externalObservers
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.internalObservers__sjs_js_Array = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_internalObservers
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.com$raquo$airstream$core$WritableObservable$_setter_$externalObservers_$eq__sjs_js_Array__V = (function(x$0) {
-  this.Lcom_raquo_airstream_state_VarSignal__f_externalObservers = x$0
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.com$raquo$airstream$core$WritableObservable$_setter_$internalObservers_$eq__sjs_js_Array__V = (function(x$0) {
-  this.Lcom_raquo_airstream_state_VarSignal__f_internalObservers = x$0
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.maybeLastSeenCurrentValue__O = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_maybeLastSeenCurrentValue
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.maybeLastSeenCurrentValue_$eq__O__V = (function(x$1) {
-  this.Lcom_raquo_airstream_state_VarSignal__f_maybeLastSeenCurrentValue = x$1
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.tryNow__s_util_Try = (function() {
-  return $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(this)
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.initialValue__s_util_Try = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_initialValue
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.topoRank__I = (function() {
-  return this.Lcom_raquo_airstream_state_VarSignal__f_topoRank
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.toObservable__Lcom_raquo_airstream_core_Observable = (function() {
-  return this
-});
-var $d_Lcom_raquo_airstream_state_VarSignal = new $TypeData().initClass({
-  Lcom_raquo_airstream_state_VarSignal: 0
-}, false, "com.raquo.airstream.state.VarSignal", {
-  Lcom_raquo_airstream_state_VarSignal: 1,
-  O: 1,
-  Lcom_raquo_airstream_core_Source: 1,
-  Lcom_raquo_airstream_core_Named: 1,
-  Lcom_raquo_airstream_core_BaseObservable: 1,
-  Lcom_raquo_airstream_core_Observable: 1,
-  Lcom_raquo_airstream_core_Source$SignalSource: 1,
-  Lcom_raquo_airstream_core_Signal: 1,
-  Lcom_raquo_airstream_core_WritableObservable: 1,
-  Lcom_raquo_airstream_core_WritableSignal: 1,
-  Lcom_raquo_airstream_state_StrictSignal: 1
-});
-$c_Lcom_raquo_airstream_state_VarSignal.prototype.$classData = $d_Lcom_raquo_airstream_state_VarSignal;
 function $f_sc_Seq__equals__O__Z($thiz, o) {
   if (($thiz === o)) {
     return true
@@ -22296,7 +22047,7 @@ function $c_Lcom_raquo_airstream_flatten_SwitchEventStream(parent, makeStream) {
   this.Lcom_raquo_airstream_flatten_SwitchEventStream__f_topoRank = 1;
   if ($is_Lcom_raquo_airstream_core_Signal(parent)) {
     var signal = $as_Lcom_raquo_airstream_core_Signal(parent);
-    var $$x1 = signal.tryNow__s_util_Try().map__F1__s_util_Try(makeStream)
+    var $$x1 = $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(signal).map__F1__s_util_Try(makeStream)
   } else {
     var $$x1 = (void 0)
   };
@@ -22440,7 +22191,7 @@ function $c_Lcom_raquo_airstream_flatten_SwitchSignal(parent) {
   $f_Lcom_raquo_airstream_core_WritableObservable__$init$__V(this);
   this.Lcom_raquo_airstream_flatten_SwitchSignal__f_maybeLastSeenCurrentValue = (void 0);
   this.Lcom_raquo_airstream_flatten_SwitchSignal__f_topoRank = 1;
-  this.Lcom_raquo_airstream_flatten_SwitchSignal__f_currentSignalTry = parent.tryNow__s_util_Try();
+  this.Lcom_raquo_airstream_flatten_SwitchSignal__f_currentSignalTry = $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(parent);
   this.Lcom_raquo_airstream_flatten_SwitchSignal__f_internalEventObserver = $m_Lcom_raquo_airstream_core_InternalObserver$().fromTry__F2__Lcom_raquo_airstream_core_InternalObserver(new $c_sjsr_AnonFunction2(((this$1) => ((nextTry, _$2) => {
     var nextTry$1 = $as_s_util_Try(nextTry);
     $as_Lcom_raquo_airstream_core_Transaction(_$2);
@@ -22478,15 +22229,6 @@ $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.com$raquo$airstream$core$
 $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.com$raquo$airstream$core$WritableObservable$_setter_$internalObservers_$eq__sjs_js_Array__V = (function(x$0) {
   this.Lcom_raquo_airstream_flatten_SwitchSignal__f_internalObservers = x$0
 });
-$c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.maybeLastSeenCurrentValue__O = (function() {
-  return this.Lcom_raquo_airstream_flatten_SwitchSignal__f_maybeLastSeenCurrentValue
-});
-$c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.maybeLastSeenCurrentValue_$eq__O__V = (function(x$1) {
-  this.Lcom_raquo_airstream_flatten_SwitchSignal__f_maybeLastSeenCurrentValue = x$1
-});
-$c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.tryNow__s_util_Try = (function() {
-  return $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(this)
-});
 $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.onNext__O__Lcom_raquo_airstream_core_Transaction__V = (function(nextValue, transaction) {
   $f_Lcom_raquo_airstream_common_InternalTryObserver__onNext__O__Lcom_raquo_airstream_core_Transaction__V(this, nextValue, transaction)
 });
@@ -22500,9 +22242,10 @@ $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.topoRank__I = (function()
   return this.Lcom_raquo_airstream_flatten_SwitchSignal__f_topoRank
 });
 $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.initialValue__s_util_Try = (function() {
-  return this.Lcom_raquo_airstream_flatten_SwitchSignal__f_parent.tryNow__s_util_Try().flatMap__F1__s_util_Try(new $c_sjsr_AnonFunction1(((_$1) => {
+  var this$1 = this.Lcom_raquo_airstream_flatten_SwitchSignal__f_parent;
+  return $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(this$1).flatMap__F1__s_util_Try(new $c_sjsr_AnonFunction1(((_$1) => {
     var _$1$1 = $as_Lcom_raquo_airstream_core_Signal(_$1);
-    return _$1$1.tryNow__s_util_Try()
+    return $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(_$1$1)
   })))
 });
 $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.onTry__s_util_Try__Lcom_raquo_airstream_core_Transaction__V = (function(nextSignalTry, transaction) {
@@ -22524,7 +22267,7 @@ $c_Lcom_raquo_airstream_flatten_SwitchSignal.prototype.onTry__s_util_Try__Lcom_r
       var _$5$1 = $as_Lcom_raquo_airstream_core_Transaction(_$5);
       var nextValue = nextSignalTry$2.flatMap__F1__s_util_Try(new $c_sjsr_AnonFunction1(((_$4) => {
         var _$4$1 = $as_Lcom_raquo_airstream_core_Signal(_$4);
-        return _$4$1.tryNow__s_util_Try()
+        return $f_Lcom_raquo_airstream_core_WritableSignal__tryNow__s_util_Try(_$4$1)
       })));
       $f_Lcom_raquo_airstream_core_WritableSignal__fireTry__s_util_Try__Lcom_raquo_airstream_core_Transaction__V(this$2, nextValue, _$5$1)
     }))(this, nextSignalTry)))

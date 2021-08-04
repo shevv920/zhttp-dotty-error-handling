@@ -3,14 +3,13 @@ package client
 import com.raquo.laminar.api.L.{ *, given }
 import io.laminext.fetch.Fetch
 import io.laminext.fetch.FetchResponse
-import io.laminext.syntax.core._
+import io.laminext.syntax.core.*
 import org.scalajs.dom
 import scala.util.{ Failure, Success }
 
 object Main:
   def main(args: Array[String]): Unit =
 
-    val fetchResultVar                      = Var[Option[String]](None)
     val (responsesStream, responseReceived) = EventStream.withCallback[FetchResponse[String]]
     val resContainer = pre(
       child <-- responsesStream.map(_.data),
