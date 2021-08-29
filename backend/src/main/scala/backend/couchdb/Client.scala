@@ -1,26 +1,26 @@
-package couchdb
+package backend.couchdb
 
-import zio.*
-import sttp.client3.*
-import sttp.client3.httpclient.zio.HttpClientZioBackend
+import zhttp.http.{ Header, HttpData, Method, Request, Response, URL }
+import zhttp.service.{ Client => zClient }
+import zio.ZIO
 
-object SimpleClient {
-  val basicUrl = "http://couchdb:5984/"
-  val sessionUrl = s"${basicUrl}_session/"
-  val body = """{ "name": "admin", "password": "password" }"""
+object Client {
+  val url = "http://couchdb:5984/test/"
+  val headers = List(
+    Header.host("localhost:5984"),
+    Header.basicHttpAuthorization("admin", "password"),
+  )
 
-  val request = basicRequest
-    .contentType("application/json")
-    .post(uri"$sessionUrl")
-    .body(body)
-    .response(asStringAlways)
-
-  val program: ZIO[zio.ZEnv, Throwable, String] =
-    for
-      backend <- HttpClientZioBackend()
-      res     <- request.send(backend).either.absolve
-      cookies = res.unsafeCookies
-      res2    <- basicRequest.cookies(cookies).get(uri"${basicUrl}_all_dbs").response(asStringAlways).send(backend).either.absolve
-    yield  res2.body
+  def getById(id: String) =
+    for {
+      url <- ZIO.fromEither(URL.fromString(s"$url/$id"))
+      req  = Request(Method.GET -> url, headers)
+      cl  <- zClient.make
+      res <- cl.request(req)
+    } yield res.content match {
+      case HttpData.CompleteData(data) => Response.jsonString(data.map(_.toChar).mkString)
+      case HttpData.StreamData(_)      => Response.text("<Chunked>")
+      case HttpData.Empty              => Response.text("")
+    }
 
 }

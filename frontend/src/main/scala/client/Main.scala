@@ -1,14 +1,12 @@
 package client
 
-import com.raquo.laminar.api.L.{ *, given }
-import io.laminext.fetch.Fetch
-import io.laminext.fetch.FetchResponse
-import io.laminext.syntax.core.*
+import com.raquo.laminar.api.L._
+import io.laminext.fetch.{ Fetch, FetchResponse }
+import io.laminext.syntax.core._
 import org.scalajs.dom
-import scala.util.{ Failure, Success }
 
-object Main:
-  def main(args: Array[String]): Unit =
+object Main {
+  def main(args: Array[String]): Unit = {
 
     val (responsesStream, responseReceived) = EventStream.withCallback[FetchResponse[String]]
     val resContainer = pre(
@@ -27,3 +25,6 @@ object Main:
 
     val containerNode = dom.document.querySelector("#root")
     render(containerNode, rootElement)
+    ()
+  }
+}
