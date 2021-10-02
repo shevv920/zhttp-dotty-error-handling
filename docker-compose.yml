@@ -4,7 +4,7 @@ services:
     working_dir: /app
     volumes:
       - ./frontend/src:/app/frontend/src
-      - ./common:/app/common
+      - ./common/src:/app/common/src
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt
       - /root/.cache
@@ -37,7 +37,7 @@ services:
     volumes:
       - ./backend/src:/app/backend/src
       - ./backend/target/scala-2.13/src_managed:/app/backend/target/scala-2.13/src_managed
-      - ./common:/app/common
+      - ./common/src:/app/common/src
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt
       - /root/.cache
