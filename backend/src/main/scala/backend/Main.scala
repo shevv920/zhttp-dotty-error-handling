@@ -1,5 +1,6 @@
 package backend
 
+import backend.resources.{ Account, DatabaseProvider }
 import common.Common.commonValue
 import zhttp.http._
 import zhttp.service.{ ChannelFactory, EventLoopGroup, _ }
@@ -13,12 +14,15 @@ object Main extends App {
       putStrLn("health check ok") *> ZIO.succeed(Response.text("ok"))
     case Method.GET -> Root =>
       ZIO.succeed(Response.text(commonValue.toString))
-    case Method.GET -> Root / "testdb" / id =>
-      couchdb.Client.getById(id)
-    case req =>
-      ZIO.succeed(Response.text(req.getBodyAsString.get))
+    case req @ Method.POST -> Root / "login" =>
+      for {
+        res <- Account.findSomeName
+      } yield Response.text(res.toString)
+
   }
-  private val env = ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup.auto()
+  private val env =
+    DatabaseProvider.live ++ ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup
+      .auto()
   private val server =
     Server.port(9000) ++              // Setup port
       Server.paranoidLeakDetection ++ // Paranoid leak detection (affects performance)

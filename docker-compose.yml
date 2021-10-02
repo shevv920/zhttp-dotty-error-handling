@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 services:
   frontend:
     working_dir: /app
@@ -21,21 +21,19 @@ services:
       - frontend
     ports:
       - "9001:80"
-  couchdb:
+  postgres:
     working_dir: /db
-    image: couchdb:latest
+    image: postgres:14-alpine
     environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=password
+      - POSTGRES_PASSWORD=dbpassword
     ports:
-      - "5984:5984"
+      - "5432:5432"
   backend:
     working_dir: /app
     image: hseeberger/scala-sbt:graalvm-ce-21.2.0-java11_1.5.5_3.0.1
     entrypoint: sbt "~backend/reStart"
     depends_on:
-      - frontend-server
-      - couchdb
+      - postgres
     volumes:
       - ./backend:/app/backend
       - ./common:/app/common
