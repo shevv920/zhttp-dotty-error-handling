@@ -14,9 +14,9 @@ object Main extends App {
       putStrLn("health check ok") *> ZIO.succeed(Response.text("ok"))
     case Method.GET -> Root =>
       ZIO.succeed(Response.text(commonValue.toString))
-    case req @ Method.POST -> Root / "login" =>
+    case Method.GET -> Root / "email" / email =>
       for {
-        res <- Account.findSomeName
+        res <- Account.findByEmail(email)
       } yield Response.text(res.toString)
 
   }

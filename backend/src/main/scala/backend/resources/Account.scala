@@ -7,11 +7,11 @@ import zio.ZIO
 object Account {
   import db.Tables._
   import slick.jdbc.PostgresProfile.api._
-  val q = Accounts.filter(_.name === "somename").map(_.email)
 
-  def findSomeName =
+  def findByEmail(email: String) =
     for {
       db  <- ZIO.access[DatabaseProvider](_.get.db)
+      q    = Accounts.filter(_.email === email).map(_.name)
       res <- SlickToZio(q.result)(db).map(_.toList)
     } yield res
 }
