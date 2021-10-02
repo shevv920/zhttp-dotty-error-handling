@@ -11,7 +11,7 @@ object Account {
   def findByEmail(email: String) =
     for {
       db  <- ZIO.access[DatabaseProvider](_.get.db)
-      q    = Accounts.filter(_.email === email).map(_.name)
+      q    = Accounts.filter(_.email === email).map(r => r.name)
       res <- SlickToZio(q.result)(db).map(_.toList)
-    } yield res
+    } yield res.headOption
 }
