@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+  frontend:
+    working_dir: /app
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./common:/app/common
+      - ./project:/app/project
+      - ./build.sbt:/app/build.sbt
+      - /root/.cache
+    image: hseeberger/scala-sbt:graalvm-ce-21.2.0-java11_1.5.5_3.0.1
+    entrypoint: sbt "~fastOptCompileCopy"
+  frontend-server:
+    working_dir: /app
+    volumes:
+      - ./frontend/resources:/usr/share/nginx/html
+    image: nginx:1.21.1-alpine
+    environment:
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    depends_on:
+      - frontend
+    ports:
+      - "9001:80"
+  postgres:
+    working_dir: /db
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_PASSWORD=dbpassword
+    ports:
+      - "5432:5432"
+  backend:
+    working_dir: /app
+    image: hseeberger/scala-sbt:graalvm-ce-21.2.0-java11_1.5.5_3.0.1
+    entrypoint: sbt "~backend/reStart"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend/src:/app/backend/src
+      - ./backend/target/scala-2.13/src_managed:/app/backend/target/scala-2.13/src_managed
+      - ./common:/app/common
+      - ./project:/app/project
+      - ./build.sbt:/app/build.sbt
+      - /root/.cache
+    ports:
+      - "9000:9000"
