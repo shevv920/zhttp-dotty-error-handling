@@ -1,33 +1,6 @@
 val zioVersion   = "1.0.12"
 val slickVersion = "3.3.3"
 
-lazy val slick = taskKey[Seq[File]]("Generate Tables.scala")
-slick := {
-  val dir       = (backend / Compile / sourceManaged).value
-  val outputDir = dir
-  val url =
-    "jdbc:postgresql://postgres/test?user=postgres&password=dbpassword" // connection info
-  val jdbcDriver  = "org.postgresql.Driver"
-  val slickDriver = "slick.jdbc.PostgresProfile"
-  val pkg         = "db"
-
-  val cp = (Compile / dependencyClasspath).value
-  val s  = streams.value
-
-  runner.value
-    .run(
-      "slick.codegen.SourceCodeGenerator",
-      cp.files,
-      Array(slickDriver, jdbcDriver, url, outputDir.getPath, pkg),
-      s.log,
-    )
-    .failed foreach (sys error _.getMessage)
-
-  val file = outputDir / pkg / "Tables.scala"
-
-  Seq(file)
-}
-
 lazy val backend = project
   .in(file("./backend"))
   .dependsOn(common.jvm)
@@ -59,14 +32,7 @@ lazy val backend = project
     ),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
   )
-
-libraryDependencies ++= Seq(
-  "com.typesafe.slick" %% "slick-codegen" % slickVersion,
-  "com.typesafe.slick" %% "slick"         % slickVersion,
-  "org.slf4j"           % "slf4j-nop"     % "1.7.32",
-  "org.postgresql"      % "postgresql"    % "42.2.24",
-)
-backend / Compile / sourceGenerators += slick.taskValue
+  .enablePlugins(SlickGenerator)
 
 lazy val frontend = project
   .in(file("./frontend"))
