@@ -25,6 +25,7 @@ lazy val backend = project
       "dev.zio"            %% "zio-config"        % "1.0.10",
       "dev.zio"            %% "zio-json"          % "0.2.0-M1",
       "dev.zio"            %% "zio"               % zioVersion,
+      "dev.zio"            %% "zio-logging"       % "0.5.12",
       "dev.zio"            %% "zio-test"          % zioVersion % Test,
       "dev.zio"            %% "zio-test-sbt"      % zioVersion % Test,
       "dev.zio"            %% "zio-test-junit"    % zioVersion % Test,

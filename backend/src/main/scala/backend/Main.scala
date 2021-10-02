@@ -1,32 +1,20 @@
 package backend
 
-import backend.resources.{ Account, DatabaseProvider }
-import common.Common.commonValue
+import backend.resources.DatabaseProvider
 import zhttp.http._
 import zhttp.service.{ ChannelFactory, EventLoopGroup, _ }
 import zhttp.service.server.ServerChannelFactory
-import zio.console.putStrLn
 import zio.{ App, ExitCode, URIO, ZIO }
 
 object Main extends App {
-  val app = Http.collectM[Request] {
-    case Method.GET -> Root / "health" =>
-      putStrLn("health check ok") *> ZIO.succeed(Response.text("ok"))
-    case Method.GET -> Root =>
-      ZIO.succeed(Response.text(commonValue.toString))
-    case Method.GET -> Root / "email" / email =>
-      for {
-        res <- Account.findByEmail(email)
-      } yield Response.text(res.toString)
 
-  }
-  private val env =
-    DatabaseProvider.live ++ ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup
-      .auto()
+  private val appEnv = DatabaseProvider.live ++ Logger.live
+  private val env = ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup
+    .auto() ++ appEnv
   private val server =
-    Server.port(9000) ++              // Setup port
-      Server.paranoidLeakDetection ++ // Paranoid leak detection (affects performance)
-      Server.app(CORS(app))           // Setup the Http app
+    Server.port(9000) ++                // Setup port
+      Server.paranoidLeakDetection ++   // Paranoid leak detection (affects performance)
+      Server.app(CORS(Log(Routes.app))) // Setup the Http app
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
     server.make
