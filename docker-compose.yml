@@ -3,7 +3,7 @@ services:
   frontend:
     working_dir: /app
     volumes:
-      - ./frontend:/app/frontend
+      - ./frontend/src:/app/frontend/src
       - ./common:/app/common
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt
@@ -35,7 +35,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./backend:/app/backend
+      - ./backend/src:/app/backend/src
+      - ./backend/target/scala-2.13/src_managed:/app/backend/target/scala-2.13/src_managed
       - ./common:/app/common
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt

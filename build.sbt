@@ -3,8 +3,8 @@ val slickVersion = "3.3.3"
 
 lazy val slick = taskKey[Seq[File]]("Generate Tables.scala")
 slick := {
-  val dir       = (Compile / sourceManaged).value
-  val outputDir = dir / "slick"
+  val dir       = (backend / Compile / sourceManaged).value
+  val outputDir = dir
   val url =
     "jdbc:postgresql://postgres/test?user=postgres&password=dbpassword" // connection info
   val jdbcDriver  = "org.postgresql.Driver"

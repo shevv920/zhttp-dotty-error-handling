@@ -2,7 +2,7 @@ package backend.resources
 
 import backend.resources.DatabaseProvider.DatabaseProvider
 import interop.SlickToZio
-import zio.{ Task, ZIO }
+import zio.ZIO
 
 object Account {
   import db.Tables._
