@@ -76,7 +76,7 @@ fastOptCompileCopy := {
   val source    = (frontend / Compile / fastOptJS).value.data
   val sourceMap = source.getParentFile / (source.getName + ".map")
   val hash      = Hash.toHex(Hash(source))
-  val htmlFile  = new File(htmlPath)
+  val htmlFile  = baseDirectory.value / htmlPath
   val srcHtml   = IO.readBytes(htmlFile)
   val htmlWithScript =
     new String(srcHtml).replaceAll("script-.*\\.js", s"script-dev-$hash.js").getBytes
@@ -84,10 +84,10 @@ fastOptCompileCopy := {
 
   IO.copyFile(
     source,
-    source.getParentFile / "with-html" / s"$hash.js",
+    source.getParentFile / "with-html" / s"script-dev-$hash.js",
   )
   IO.copyFile(
     sourceMap,
-    source.getParentFile / "with-html" / s"$hash.js.map",
+    source.getParentFile / "with-html" / s"script-dev-$hash.js.map",
   )
 }

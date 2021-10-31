@@ -1,9 +1,13 @@
 version: "3.3"
+volumes:
+  frontend-static:
 services:
   frontend:
     working_dir: /app
     volumes:
       - ./frontend/src:/app/frontend/src
+      - ./frontend/resources:/app/frontend/resources
+      - frontend-static:/app/frontend/target/scala-2.13/with-html
       - ./common/src:/app/common/src
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt
@@ -13,7 +17,7 @@ services:
   frontend-server:
     working_dir: /app
     volumes:
-      - ./frontend/target/scala-2.13/with-html:/usr/share/nginx/html
+      - frontend-static:/usr/share/nginx/html
     image: nginx:1.21.1-alpine
     environment:
       - NGINX_ENTRYPOINT_QUIET_LOGS=1
