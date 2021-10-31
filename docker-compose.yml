@@ -13,7 +13,7 @@ services:
   frontend-server:
     working_dir: /app
     volumes:
-      - ./frontend/resources:/usr/share/nginx/html
+      - ./frontend/target/scala-2.13/with-html:/usr/share/nginx/html
     image: nginx:1.21.1-alpine
     environment:
       - NGINX_ENTRYPOINT_QUIET_LOGS=1
