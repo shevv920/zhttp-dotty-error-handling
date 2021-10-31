@@ -14,7 +14,7 @@ object DatabaseProvider {
   def live: ULayer[DatabaseProvider] = ZLayer.succeed(new Service {
     override def db: Task[BasicBackend#DatabaseDef] = ZIO.effect(
       PostgresProfile.api.Database.forURL(
-        "jdbc:postgresql://postgres/test?user=postgres&password=dbpassword",
+        "jdbc:postgresql://postgres/postgres?user=postgres&password=dbpassword",
       ),
     )
   })

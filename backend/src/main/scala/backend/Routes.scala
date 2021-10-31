@@ -1,32 +1,34 @@
 package backend
 
 import backend.resources.Account
+import backend.resources.DatabaseProvider.DatabaseProvider
 import common.Common.commonValue
-import zhttp.http.{ Http, Method, Request, Response }
-import zio.ZIO
-import zio.console.putStrLn
+import db.Tables.AccountsRow
+import zhttp.http.HttpError.BadRequest
 import zhttp.http._
+import zio.ZIO
 
 object Routes {
-
-  def authenticate[R, E](fail: HttpApp[R, E], success: HttpApp[R, E]): HttpApp[R, E] =
-    Http.flatten {
-      HttpApp.fromFunction {
-        _.getBasicAuthorizationCredentials
-          .flatMap(_ => Some(false))
-          .fold[HttpApp[R, E]](fail)(_ => success)
-      }
-    }
-
-  val success: HttpApp[Any, Nothing] = HttpApp.collectM {
+  val public = HttpApp.collect {
     case Method.GET -> Root / "health" =>
-      ZIO.succeed(Response.text("ok"))
+      Response.text("ok")
     case Method.GET -> Root =>
-      ZIO.succeed(Response.text(commonValue.toString))
+      Response.text(commonValue.toString)
+    case Method.GET -> Root / "r" => Response.temporaryRedirect("http://localhost:9001")
   }
 
-  val fail = HttpApp.forbidden("Forbidden!")
-  // Composing all the HttpApps together
-  //  val app: UHttpApp = authenticate(fail, success)
-  val app = success
+  val publicM = HttpApp
+    .collectM { case req @ Method.POST -> Root / "login" =>
+      for {
+        token <- Account.login(req)
+      } yield Response.text(token)
+    }
+    .catchAll { error: Throwable =>
+      HttpApp.error(BadRequest(error.getMessage))
+    }
+
+  def authed(accountsRow: Option[AccountsRow]): RHttpApp[DatabaseProvider] = HttpApp.collect {
+    case _ if accountsRow.isEmpty  => HttpError.Unauthorized("Unauthorized").toResponse
+    case Method.GET -> Root / "me" => Response.text(s"Hello ${accountsRow.get.name}")
+  }
 }

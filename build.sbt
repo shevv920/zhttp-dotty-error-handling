@@ -69,18 +69,25 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")
 
-val jsPath = "frontend/resources"
+lazy val jsPath   = "frontend/resources"
+lazy val htmlPath = "frontend/resources/index.html"
 
 fastOptCompileCopy := {
   val source    = (frontend / Compile / fastOptJS).value.data
   val sourceMap = source.getParentFile / (source.getName + ".map")
+  val hash      = Hash.toHex(Hash(source))
+  val htmlFile  = new File(htmlPath)
+  val srcHtml   = IO.readBytes(htmlFile)
+  val htmlWithScript =
+    new String(srcHtml).replaceAll("script-.*\\.js", s"script-dev-$hash.js").getBytes
+  IO.write(source.getParentFile / "with-html" / "index.html", htmlWithScript)
 
   IO.copyFile(
     source,
-    baseDirectory.value / jsPath / "dev.js",
+    source.getParentFile / "with-html" / s"$hash.js",
   )
   IO.copyFile(
     sourceMap,
-    baseDirectory.value / jsPath / "dev.js.map",
+    source.getParentFile / "with-html" / s"$hash.js.map",
   )
 }

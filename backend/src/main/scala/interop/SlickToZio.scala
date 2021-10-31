@@ -1,14 +1,15 @@
 package interop
 
-import slick.basic.BasicBackend
+import backend.resources.DatabaseProvider.DatabaseProvider
 import slick.dbio.DBIO
-import zio.{ Task, ZIO }
+import zio.ZIO
 
 object SlickToZio {
 
-  def apply[T](action: DBIO[T])(implicit dbTask: Task[BasicBackend#DatabaseDef]): Task[T] =
+  def apply[T](action: DBIO[T]): ZIO[DatabaseProvider, Throwable, T] =
     for {
-      db  <- dbTask
-      res <- ZIO.fromFuture(implicit ec => db.run(action))
+      dbTask <- ZIO.access[DatabaseProvider](_.get.db)
+      db     <- dbTask
+      res    <- ZIO.fromFuture(implicit ec => db.run(action))
     } yield res
 }

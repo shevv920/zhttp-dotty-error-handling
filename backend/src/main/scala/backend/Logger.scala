@@ -4,7 +4,7 @@ import zhttp.http.{ Http, HttpApp, Request, Response }
 import zio.ZIO
 import zio.logging._
 
-object Logger {
+object Log {
 
   val live =
     Logging.console(
@@ -13,7 +13,7 @@ object Logger {
     ) >>> Logging.withRootLoggerName("BACKEND")
 }
 
-object Log {
+object Logger {
   def apply[R <: Logging, E](httpApp: HttpApp[R, E]): HttpApp[R, E] = Http.flatten {
     Http.fromEffectFunction[Request] { request =>
       for {
@@ -31,4 +31,6 @@ object Log {
       }
     }
   }
+
+  def <<<[R <: Logging, E](httpApp: HttpApp[R, E]): HttpApp[R, E] = apply(httpApp)
 }

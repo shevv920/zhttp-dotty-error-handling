@@ -10,7 +10,7 @@ object SlickGenerator extends AutoPlugin {
         val dir       = (Compile / sourceManaged).value
         val outputDir = dir
         val url =
-          "jdbc:postgresql://postgres/test?user=postgres&password=dbpassword" // connection info
+          "jdbc:postgresql://postgres/postgres?user=postgres&password=dbpassword" // connection info
         val jdbcDriver  = "org.postgresql.Driver"
         val slickDriver = "slick.jdbc.PostgresProfile"
         val pkg         = "db"
