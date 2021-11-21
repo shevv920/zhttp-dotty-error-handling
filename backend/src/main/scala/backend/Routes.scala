@@ -1,12 +1,13 @@
 package backend
 
+import backend.db._
 import backend.resources.Account
 import backend.resources.DatabaseProvider.DatabaseProvider
 import common.Common.commonValue
-import db.Tables.AccountsRow
+import io.netty.handler.codec.http.HttpHeaderNames
 import zhttp.http.HttpError.BadRequest
+import zhttp.http.Response.HttpResponse
 import zhttp.http._
-import zio.ZIO
 
 object Routes {
   val public = HttpApp.collect {
@@ -21,13 +22,17 @@ object Routes {
     .collectM { case req @ Method.POST -> Root / "login" =>
       for {
         token <- Account.login(req)
-      } yield Response.text(token)
+      } yield HttpResponse(
+        Status.OK,
+        List(Header.custom(HttpHeaderNames.SET_COOKIE.toString, s"token=$token")),
+        HttpData.empty,
+      )
     }
     .catchAll { error: Throwable =>
       HttpApp.error(BadRequest(error.getMessage))
     }
 
-  def authed(accountsRow: Option[AccountsRow]): RHttpApp[DatabaseProvider] = HttpApp.collect {
+  def authed(accountsRow: Option[Account]): RHttpApp[DatabaseProvider] = HttpApp.collect {
     case _ if accountsRow.isEmpty  => HttpError.Unauthorized("Unauthorized").toResponse
     case Method.GET -> Root / "me" => Response.text(s"Hello ${accountsRow.get.name}")
   }

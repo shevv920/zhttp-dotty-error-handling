@@ -1,19 +1,26 @@
 package backend.resources
 
-import db.Tables.AccountsRow
-import interop.SlickToZio
+import backend.Config.AppConfig
+import interop.SlickToZio._
 import zio.ZIO
+import zio.config.getConfig
 
 object Token {
-  import db.Tables._
-  import slick.jdbc.PostgresProfile.api._
+  import backend.db.Tables._
+  import backend.db.Tables.profile.api._
+
+  val createIfNotExists = tokens.schema.createIfNotExists.toZIO
 
   def getAccount(token: String) = {
     val query =
       for {
-        _   <- Tokens.filter(_.value === token)
-        acc <- Accounts
+        _   <- tokens.filter(_.value === token)
+        acc <- accounts
       } yield acc
-    SlickToZio(query.result.headOption)
+    for {
+      config <- getConfig[AppConfig]
+      _      <- ZIO.when(config.env == "development")(createIfNotExists)
+      res    <- query.result.headOption.toZIO
+    } yield res
   }
 }

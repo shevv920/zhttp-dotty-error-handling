@@ -33,7 +33,7 @@ lazy val backend = project
     ),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
   )
-  .enablePlugins(SlickGenerator)
+//  .enablePlugins(SlickGenerator)
 
 lazy val frontend = project
   .in(file("./frontend"))

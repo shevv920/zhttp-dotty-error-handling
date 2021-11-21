@@ -7,9 +7,13 @@ import zhttp.service._
 import zio.{ App, ExitCode, URIO, ZIO }
 
 object Main extends App {
-  private val appEnv = DatabaseProvider.live ++ Log.live
-  private val env = ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup
-    .auto() ++ appEnv
+  private val appEnv = Config.live ++ (Config.live >>> DatabaseProvider.live) ++ Log.live
+  private val env =
+    ServerChannelFactory.auto ++
+      ChannelFactory.auto ++
+      EventLoopGroup.auto() ++
+      appEnv
+
   private val server =
     Server.port(9000) ++              // Setup port
       Server.paranoidLeakDetection ++ // Paranoid leak detection (affects performance)
