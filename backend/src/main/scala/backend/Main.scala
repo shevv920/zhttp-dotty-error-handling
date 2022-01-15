@@ -1,29 +1,17 @@
 package backend
 
-import backend.resources.DatabaseProvider
-import zhttp.http._
-import zhttp.service.server.ServerChannelFactory
+
+import backend.resources.{DatabaseProviderLive, TokenRepoLive}
+import zhttp.http.Middleware
 import zhttp.service._
-import zio.{ App, ExitCode, URIO, ZIO }
+import zio.{App, ExitCode, URIO}
 
 object Main extends App {
-  private val appEnv = Config.live ++ (Config.live >>> DatabaseProvider.live) ++ Log.live
-  private val env =
-    ServerChannelFactory.auto ++
-      ChannelFactory.auto ++
-      EventLoopGroup.auto() ++
-      appEnv
+  val middlewares = Middleware.debug ++ Middleware.cors()
 
-  private val server =
-    Server.port(9000) ++              // Setup port
-      Server.paranoidLeakDetection ++ // Paranoid leak detection (affects performance)
-      Server.app(
-        CORS(Logger <<< (Routes.public +++ Routes.publicM +++ (Auth <<< Routes.authed))),
-      )
+  val app = (Routes.public ++ Routes.publicM @@ middlewares) ++ Routes.authed @@ (middlewares ++ Auth.tokenAuth)
 
+  val env = zio.system.System.live >>> (Config.live >+> DatabaseProviderLive.layer >+> TokenRepoLive.layer)
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
-    server.make
-      .use(_ => ZIO.never)
-      .provideCustomLayer(env)
-      .exitCode
+    Server.start(9000, app).provideCustomLayer(env).exitCode
 }

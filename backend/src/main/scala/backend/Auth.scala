@@ -1,31 +1,26 @@
 package backend
 
-import backend.Config.AppConfig
-import backend.resources.DatabaseProvider.DatabaseProvider
-import backend.resources.Token
-import db._
-import zhttp.http.{ Http, HttpApp, HttpError, Request }
-import zio.ZIO
-import zio.Has
+
+import backend.resources.TokenRepo
+import zhttp.http.Middleware.ifThenElseM
+import zhttp.http.{Headers, Http, Method, Middleware, Status}
+import zio.{Has, ZIO}
 
 object Auth {
-  private val fail = Http.succeed(HttpError.BadRequest("No auth token provided").toResponse)
 
-  def apply[R <: Has[AppConfig] with DatabaseProvider](
-      app: Option[Account] => HttpApp[R, Throwable],
-  ): HttpApp[R, Throwable] =
-    Http.flatten {
-      Http.fromEffectFunction[Request] { request =>
-        val token = request.getHeader("token").map(_.value.toString)
-        token match {
-          case None        => ZIO.succeed(fail)
-          case Some(token) => Token.getAccount(token).map(res => app(res))
-        }
-      }
+  def auth[R, E](verify: Headers => ZIO[R, E, Boolean], responseHeaders: Headers = Headers.empty): Middleware[R, E] =
+    ifThenElseM((_, _, h) => verify(h))(
+      Middleware.identity,
+      Middleware.fromApp(Http.status(Status.FORBIDDEN).addHeaders(responseHeaders)),
+    )
+
+  val tokenAuth: Middleware[Has[TokenRepo], Throwable] = auth(headers => {
+    headers.getBearerToken match {
+      case Some(token) =>
+        for {
+          acc <- TokenRepo.getAccountByTokenValue(token)
+        } yield acc.nonEmpty
+      case None => ZIO.succeed(false)
     }
-
-  def <<<[R <: Has[AppConfig] with DatabaseProvider](
-      acc: Option[Account] => HttpApp[R, Throwable],
-  ): HttpApp[R, Throwable] =
-    apply(acc)
+  })
 }
