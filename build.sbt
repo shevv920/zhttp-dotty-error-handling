@@ -1,5 +1,5 @@
-val zioVersion   = "1.0.12"
-val slickVersion = "3.3.3"
+val zioVersion   = "2.0.0-RC4"
+val zhttpVersion = "2.0.0-RC6"
 
 lazy val backend = project
   .in(file("./backend"))
@@ -7,34 +7,31 @@ lazy val backend = project
   .settings(
     inThisBuild(
       List(
-        name := "backend",
+        name         := "backend",
         organization := "com.example",
-        version := "0.0.1",
-        scalaVersion := "2.13.6",
-      ),
+        version      := "0.0.1",
+        scalaVersion := "2.13.8",
+      )
     ),
-    resolvers +=
-      "Sonatype OSS Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
-      "com.typesafe.slick" %% "slick"             % slickVersion,
-      "com.typesafe.slick" %% "slick-codegen"     % slickVersion,
-      "com.typesafe.slick" %% "slick-hikaricp"    % slickVersion,
-      "org.postgresql"      % "postgresql"        % "42.3.1",
-      "org.slf4j"           % "slf4j-nop"         % "1.7.32",
-      "io.d11"             %% "zhttp"             % "1.0.0.0-RC21",
-      "dev.zio"            %% "zio-config"        % "1.0.10",
-      "dev.zio"            %% "zio-json"          % "0.2.0-M1",
-      "dev.zio"            %% "zio"               % zioVersion,
-      "dev.zio"            %% "zio-logging"       % "0.5.14",
-      "dev.zio"            %% "zio-test"          % zioVersion % Test,
-      "dev.zio"            %% "zio-test-sbt"      % zioVersion % Test,
-      "dev.zio"            %% "zio-test-junit"    % zioVersion % Test,
-      "dev.zio"            %% "zio-test-magnolia" % zioVersion % Test,
-      "io.d11"             %% "zhttp-test"        % "1.0.0.0-RC21" % Test,
+      "org.postgresql"        % "postgresql"          % "42.3.3",
+      "kuzminki-zio-2"       %% "kuzminki-zio-2"      % "0.9.2-uuid3",
+      "org.slf4j"             % "slf4j-nop"           % "1.7.36",
+      "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
+      "io.d11"               %% "zhttp"               % zhttpVersion,
+      "dev.zio"              %% "zio-config"          % "3.0.0-RC6",
+      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC6",
+      "dev.zio"              %% "zio-json"            % "0.3.0-RC3",
+      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC10",
+      "dev.zio"              %% "zio"                 % zioVersion,
+      "dev.zio"              %% "zio-test"            % zioVersion   % Test,
+      "dev.zio"              %% "zio-test-sbt"        % zioVersion   % Test,
+      "dev.zio"              %% "zio-test-junit"      % zioVersion   % Test,
+      "dev.zio"              %% "zio-test-magnolia"   % zioVersion   % Test,
+      "io.d11"               %% "zhttp-test"          % zhttpVersion % Test,
     ),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
   )
-//  .enablePlugins(SlickGenerator)
 
 lazy val frontend = project
   .in(file("./frontend"))
@@ -43,11 +40,11 @@ lazy val frontend = project
   .settings(
     inThisBuild(
       List(
-        name := "frontend",
+        name         := "frontend",
         organization := "com.example",
-        version := "0.0.1",
-        scalaVersion := "2.13.6",
-      ),
+        version      := "0.0.1",
+        scalaVersion := "2.13.8",
+      )
     ),
     libraryDependencies ++= Seq(
       "com.raquo"   %%% "laminar"  % "0.14.2",
@@ -64,10 +61,10 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
   .settings(
     inThisBuild(
       List(
-        name := "common",
-        scalaVersion := "2.13.6",
-      ),
-    ),
+        name         := "common",
+        scalaVersion := "2.13.8",
+      )
+    )
   )
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")

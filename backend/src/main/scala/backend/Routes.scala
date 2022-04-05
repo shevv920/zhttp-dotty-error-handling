@@ -1,22 +1,24 @@
 package backend
 
-import common.Common.commonValue
+import backend.resources.{ Accounts, Fruits }
 import zhttp.http._
-import zio.ZIO
 
 object Routes {
-  val public: Http[Any, Nothing, Any, UResponse] = Http.collect {
-    case Method.GET -> !! / "health" =>
-      Response.text("ok")
-    case Method.GET -> !! =>
-      Response.text(commonValue.toString)
+  private val health: Http[Any, Nothing, Request, Response] = Http.collect { case Method.GET -> !! / "health" =>
+    Response.text("ok")
   }
 
-  val publicM: Http[Any, Throwable, Any, UResponse] = Http.collectM {
-    case Method.GET -> !! / "M" => ZIO.effect(Response.text("M"))
+  val public = Http.collectHttp[Request] {
+    case _ -> !! / "health" =>
+      health
+    case _ -> "accounts" /: path =>
+      Accounts.public.setPath(path)
   }
 
-  val authed: Http[Any, Throwable, Any, UResponse] = Http.collectM {
-    case Method.GET -> !! / "a" => ZIO.effect(Response.text("a"))
+  val priv = Http.collectHttp[Request] {
+    case _ -> "fruits" /: path =>
+      Fruits.priv.setPath(path)
+    case _ -> "accounts" /: path =>
+      Accounts.priv.setPath(path)
   }
 }
