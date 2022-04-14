@@ -18,11 +18,12 @@ lazy val backend = project
       "kuzminki-zio-2"       %% "kuzminki-zio-2"      % "0.9.2-uuid3",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
+      "io.github.nremond"    %% "pbkdf2-scala"        % "0.6.5",
       "io.d11"               %% "zhttp"               % zhttpVersion,
-      "dev.zio"              %% "zio-config"          % "3.0.0-RC6",
-      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC6",
-      "dev.zio"              %% "zio-json"            % "0.3.0-RC3",
-      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC10",
+      "dev.zio"              %% "zio-config"          % "3.0.0-RC7",
+      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC7",
+      "dev.zio"              %% "zio-json"            % "0.3.0-RC6",
+      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC12",
       "dev.zio"              %% "zio"                 % zioVersion,
       "dev.zio"              %% "zio-test"            % zioVersion   % Test,
       "dev.zio"              %% "zio-test-sbt"        % zioVersion   % Test,
@@ -50,7 +51,8 @@ lazy val frontend = project
       "com.raquo"   %%% "laminar"  % "0.14.2",
       "com.raquo"   %%% "waypoint" % "0.5.0",
       "com.lihaoyi" %%% "upickle"  % "1.4.2",
-      "io.laminext" %%% "fetch"    % "0.14.2",
+      "dev.zio"     %%% "zio-json" % "0.3.0-RC6",
+      "io.laminext" %%% "fetch"    % "0.14.3",
     ),
     scalaJSUseMainModuleInitializer := true,
   )
@@ -64,7 +66,8 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
         name         := "common",
         scalaVersion := "2.13.8",
       )
-    )
+    ),
+    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC6",
   )
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")

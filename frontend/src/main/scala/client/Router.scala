@@ -22,8 +22,10 @@ object Router {
 
   val homeRoute: Route[Home.type, Unit] = Route.static(Home, root / endOfSegments)
 
+  val signupRoute = Route.static(Signup, root / "signup")
+
   val router = new Router[Page](
-    routes = List(loginRoute, homeRoute),
+    routes = List(loginRoute, homeRoute, signupRoute),
     getPageTitle = _.title,
     serializePage = page => write(page)(rw),
     deserializePage = pageStr => read(pageStr)(rw),

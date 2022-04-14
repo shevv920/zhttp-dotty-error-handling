@@ -33,6 +33,8 @@ services:
       - POSTGRES_PASSWORD=dbpassword
     ports:
       - "5432:5432"
+    volumes:
+      - ./backend/src/main/resources/sql:/docker-entrypoint-initdb.d/
   backend:
     working_dir: /app
     image: hseeberger/scala-sbt:graalvm-ce-21.3.0-java17_1.6.1_3.1.0

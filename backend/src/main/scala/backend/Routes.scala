@@ -15,10 +15,7 @@ object Routes {
       Accounts.public.setPath(path)
   }
 
-  val priv = Http.collectHttp[Request] {
-    case _ -> "fruits" /: path =>
-      Fruits.priv.setPath(path)
-    case _ -> "accounts" /: path =>
-      Accounts.priv.setPath(path)
+  val authed = Http.collectHttp[Request] { case _ -> "fruits" /: path =>
+    Fruits.closed.setPath(path)
   }
 }

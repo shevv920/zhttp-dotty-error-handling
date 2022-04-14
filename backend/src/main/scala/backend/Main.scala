@@ -1,11 +1,13 @@
 package backend
 
-import backend.resources.Accounts.jwtDecode
+import backend.Security.jwtDecode
 import zhttp.http.Middleware.interceptZIOPatch
 import zhttp.http._
 import zhttp.http.middleware.HttpMiddleware
 import zhttp.service._
 import zio.{ Clock, ExitCode, URIO, ZIO, ZIOAppDefault }
+
+import java.net.InetAddress
 
 object Main extends ZIOAppDefault {
   private val middlewares = myDebug ++ Middleware.cors()
@@ -21,20 +23,15 @@ object Main extends ZIOAppDefault {
     }
 
   def authMiddleware: HttpMiddleware[Any, Throwable] = Middleware.bearerAuthZIO { token =>
-    for {
-      username <- ZIO.fromTry(jwtDecode(token))
-      _        <- ZIO.log(token)
-      _        <- ZIO.log(username.toString)
-      //      acc      <- sql.select(items).colsType(_.itemPublic).where(acc => acc.username === username.content).runHeadOpt
-    } yield true
+    ZIO.fromTry(jwtDecode(token)) *> ZIO.succeed(true)
   }
 
-  private val privApp = Routes.priv @@ authMiddleware
-  private val pubApp  = Routes.public
-  private val app     = (pubApp ++ privApp) @@ middlewares
+  private val authedApp = Routes.authed @@ authMiddleware
+  private val pubApp    = Routes.public
+  private val app       = (pubApp ++ authedApp) @@ middlewares
 
-  private val env = Database.layer
+  private val env = Database.live
 
   override def run: URIO[Any, ExitCode] =
-    Server.start(9000, app).provideLayer(env).exitCode
+    Server.start(InetAddress.getByName("localhost"), 9000, app).provideLayer(env).exitCode
 }
