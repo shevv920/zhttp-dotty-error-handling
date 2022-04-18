@@ -10,15 +10,9 @@ import upickle.default._
 object Router {
   import Pages._
 
-  implicit val UserPageRW: ReadWriter[Login] = macroRW
-  implicit val rw: ReadWriter[Page]          = macroRW
+  implicit val rw: ReadWriter[Page] = macroRW
 
-  val loginRoute: Route[Login, FragmentPatternArgs[Unit, Unit, String]] =
-    Route.withFragment(
-      encode = page => FragmentPatternArgs(path = (), query = (), fragment = page.token),
-      decode = args => Login(args.fragment),
-      pattern = (root / "login" / endOfSegments) withFragment fragment[String],
-    )
+  val loginRoute = Route.static(Signin, root / "signin")
 
   val homeRoute: Route[Home.type, Unit] = Route.static(Home, root / endOfSegments)
 

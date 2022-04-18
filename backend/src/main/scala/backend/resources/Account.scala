@@ -31,15 +31,16 @@ object Accounts extends Resource[Accounts] {
   val public = Http.collectZIO[Request] {
     case req @ Method.POST -> !! / "signin" =>
       for {
-        body         <- req.bodyAsString
-        loginRequest <- ZIO.fromEither(body.fromJson[LoginRequest]).mapError(RequestParseError.apply)
+        body <- req.bodyAsString
+        loginRequest <-
+          ZIO.fromEither(body.fromJson[SigninRequest]).tapError(ZIO.logError(_)).mapError(e => RequestParseError(e))
         accOpt <-
           sql
             .select(items)
             .colsType(_.itemPublic)
             .where(acc => Seq(acc.username === loginRequest.username, acc.password === loginRequest.password.toHexHash))
             .runHeadOpt
-        acc <- ZIO.fromOption(accOpt).mapError(_ => RequestParseError("not found"))
+        acc <- ZIO.fromOption(accOpt).mapError(_ => new Throwable("not found"))
       } yield Response.json(jwtEncode(acc.username))
     case req @ Method.POST -> !! / "signup" =>
       for {
