@@ -1,29 +1,21 @@
-val zioVersion   = "2.0.0-RC4"
-val zhttpVersion = "2.0.0-RC6"
+val zioVersion   = "2.0.0-RC5"
+val zhttpVersion = "2.0.0-RC7"
 
 lazy val backend = project
   .in(file("./backend"))
   .dependsOn(common.jvm)
   .settings(
-    inThisBuild(
-      List(
-        name         := "backend",
-        organization := "com.example",
-        version      := "0.0.1",
-        scalaVersion := "2.13.8",
-      )
-    ),
+    ThisBuild / scalaVersion := "2.13.8",
     libraryDependencies ++= Seq(
-      "org.postgresql"        % "postgresql"          % "42.3.3",
-      "kuzminki-zio-2"       %% "kuzminki-zio-2"      % "0.9.2-uuid3",
+      "org.postgresql"        % "postgresql"          % "42.3.4",
+      "kuzminki-zio-2"        % "kuzminki-zio-2_2.13" % "0.9.2-uuid3",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
-      "io.github.nremond"    %% "pbkdf2-scala"        % "0.6.5",
+      "io.github.nremond"     % "pbkdf2-scala_2.13"   % "0.6.5",
       "io.d11"               %% "zhttp"               % zhttpVersion,
-      "dev.zio"              %% "zio-config"          % "3.0.0-RC7",
-      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC7",
-      "dev.zio"              %% "zio-json"            % "0.3.0-RC6",
-      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC12",
+      "dev.zio"              %% "zio-config"          % "3.0.0-RC8",
+      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC8",
+      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC13",
       "dev.zio"              %% "zio"                 % zioVersion,
       "dev.zio"              %% "zio-test"            % zioVersion   % Test,
       "dev.zio"              %% "zio-test-sbt"        % zioVersion   % Test,
@@ -39,20 +31,13 @@ lazy val frontend = project
   .dependsOn(common.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(
-    inThisBuild(
-      List(
-        name         := "frontend",
-        organization := "com.example",
-        version      := "0.0.1",
-        scalaVersion := "2.13.8",
-      )
-    ),
     libraryDependencies ++= Seq(
-      "com.raquo"   %%% "laminar"  % "0.14.2",
-      "com.raquo"   %%% "waypoint" % "0.5.0",
-      "com.lihaoyi" %%% "upickle"  % "1.4.2",
-      "dev.zio"     %%% "zio-json" % "0.3.0-RC6",
-      "io.laminext" %%% "fetch"    % "0.14.3",
+      "com.raquo"                    %%% "laminar"  % "0.14.2",
+      "com.raquo"                    %%% "waypoint" % "0.5.0",
+      "com.lihaoyi"                  %%% "upickle"  % "1.4.2",
+      "dev.zio"                      %%% "zio-json" % "0.3.0-RC7",
+      "io.laminext"                  %%% "fetch"    % "0.14.3",
+      "com.github.japgolly.scalacss" %%% "core"     % "1.0.0",
     ),
     scalaJSUseMainModuleInitializer := true,
   )
@@ -61,13 +46,7 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("./common"))
   .settings(
-    inThisBuild(
-      List(
-        name         := "common",
-        scalaVersion := "2.13.8",
-      )
-    ),
-    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC6",
+    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC7"
   )
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")

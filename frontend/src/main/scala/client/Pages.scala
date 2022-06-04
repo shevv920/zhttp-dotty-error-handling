@@ -64,6 +64,30 @@ object Pages {
     val usernameInput = components.usernameInput()
     val passwordInput = components.passwordInput()
 
+    val responseStream = responsesStream.recoverToTry.map {
+      case Success(response) =>
+        CollectionCommand.Append(
+          div(
+            div(
+              code("Status: "),
+              code(s"${response.status} ${response.statusText}"),
+            ),
+            div(
+              code(response.data)
+            ),
+          )
+        )
+      case Failure(exception) =>
+        CollectionCommand.Append(
+          div(
+            div(
+              code("Error: "),
+              code(exception.getMessage),
+            )
+          )
+        )
+    }
+
     val formElement =
       form(
         thisEvents(onSubmit.preventDefault)
@@ -91,29 +115,7 @@ object Pages {
           code("received:")
         ),
         div(
-          children.command <-- responsesStream.recoverToTry.map {
-            case Success(response) =>
-              CollectionCommand.Append(
-                div(
-                  div(
-                    code("Status: "),
-                    code(s"${response.status} ${response.statusText}"),
-                  ),
-                  div(
-                    code(response.data)
-                  ),
-                )
-              )
-            case Failure(exception) =>
-              CollectionCommand.Append(
-                div(
-                  div(
-                    code("Error: "),
-                    code(exception.getMessage),
-                  )
-                )
-              )
-          }
+          children.command <-- responseStream
         ),
       ),
     )
