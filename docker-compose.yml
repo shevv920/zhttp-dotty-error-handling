@@ -41,6 +41,14 @@ services:
     entrypoint: sbt "~backend/reStart"
     depends_on:
       - postgres
+    environment:
+      - APP_HOST=localhost
+      - APP_PORT=9000
+      - DATABASE_PORT=5432
+      - DATABASE_HOST=postgres
+      - DATABASE_USER=postgres
+      - DATABASE_NAME=postgres
+      - DATABASE_PASSWORD=dbpassword
     volumes:
       - ./backend/src:/app/backend/src
       - ./backend/target/scala-2.13/src_managed:/app/backend/target/scala-2.13/src_managed
@@ -48,5 +56,6 @@ services:
       - ./project:/app/project
       - ./build.sbt:/app/build.sbt
       - /root/.cache
+      - /home/vv/.ivy2/local:/root/.ivy2/local
     ports:
       - "9000:9000"

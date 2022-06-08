@@ -30,8 +30,15 @@ object Main extends ZIOAppDefault {
   private val pubApp    = Routes.public
   private val app       = (pubApp ++ authedApp) @@ middlewares
 
-  private val env = Database.live
+  private val env = Database.live ++ Config.live
 
-  override def run: URIO[Any, ExitCode] =
-    Server.start(InetAddress.getByName("localhost"), 9000, app).provideLayer(env).exitCode
+  override def run: URIO[Any, ExitCode] = {
+    val server = for {
+      config <- ZIO.service[AppConfig]
+      _      <- ZIO.logInfo(s"Starting server on ${config.host}:${config.port}")
+      res    <- Server.start(InetAddress.getByName(config.host), config.port, app)
+    } yield res
+
+    server.provideLayer(env).exitCode
+  }
 }

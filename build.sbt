@@ -1,5 +1,6 @@
-val zioVersion   = "2.0.0-RC5"
-val zhttpVersion = "2.0.0-RC7"
+val zioVersion   = "2.0.0-RC6"
+val zhttpVersion = "2.0.0-RC9"
+val zioConfig    = "3.0.0-RC9"
 
 lazy val backend = project
   .in(file("./backend"))
@@ -8,14 +9,14 @@ lazy val backend = project
     ThisBuild / scalaVersion := "2.13.8",
     libraryDependencies ++= Seq(
       "org.postgresql"        % "postgresql"          % "42.3.4",
-      "kuzminki-zio-2"        % "kuzminki-zio-2_2.13" % "0.9.2-uuid3",
+      "kuzminki-zio-2"        % "kuzminki-zio-2_2.13" % "0.9.2-uuid3-zio2-rc6",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
       "io.github.nremond"     % "pbkdf2-scala_2.13"   % "0.6.5",
       "io.d11"               %% "zhttp"               % zhttpVersion,
-      "dev.zio"              %% "zio-config"          % "3.0.0-RC8",
-      "dev.zio"              %% "zio-config-magnolia" % "3.0.0-RC8",
-      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC13",
+      "dev.zio"              %% "zio-config"          % zioConfig,
+      "dev.zio"              %% "zio-config-magnolia" % zioConfig,
+      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC14",
       "dev.zio"              %% "zio"                 % zioVersion,
       "dev.zio"              %% "zio-test"            % zioVersion   % Test,
       "dev.zio"              %% "zio-test-sbt"        % zioVersion   % Test,

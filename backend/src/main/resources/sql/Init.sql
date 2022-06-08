@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS accounts (
     PRIMARY KEY (id)
 );
 
-CREATE UNIQUE INDEX ux_username ON accounts(LOWER(username))
-CREATE UNIQUE INDEX ux_name ON fruits(LOWER(username))
+CREATE UNIQUE INDEX ux_username ON accounts(LOWER(username));
+CREATE UNIQUE INDEX ux_name ON fruits(LOWER(name));

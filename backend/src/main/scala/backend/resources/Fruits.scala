@@ -48,6 +48,7 @@ object Fruits extends Resource[Fruits] {
       .run
   }
 
+  import zio.json._
   val closed: Http[Kuzminki, Throwable, Request, Response] = Http.collectZIO {
     case req @ Method.GET -> !! =>
       for {
@@ -59,7 +60,6 @@ object Fruits extends Resource[Fruits] {
       } yield Response.json(res.toJson)
 
     case req @ Method.POST -> !! =>
-      import zio.json._
       val job = for {
         body  <- req.bodyAsString
         fruit <- ZIO.fromEither(body.fromJson[InsertFruit]).tapError(s => ZIO.log(s)).mapError(RequestParseError.apply)
@@ -68,7 +68,6 @@ object Fruits extends Resource[Fruits] {
 
       job.map(j => Response.json(j.toJson))
     case req @ Method.PUT -> !! / uuidPath(id) =>
-      import zio.json._
       val job = for {
         body  <- req.bodyAsString
         fruit <- ZIO.fromEither(body.fromJson[Fruit]).mapError(RequestParseError.apply)
