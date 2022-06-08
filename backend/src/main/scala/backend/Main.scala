@@ -1,25 +1,44 @@
 package backend
 
-import backend.resources.DatabaseProvider
+import backend.Security.jwtDecode
+import zhttp.http.Middleware.interceptZIOPatch
 import zhttp.http._
-import zhttp.service.server.ServerChannelFactory
+import zhttp.http.middleware.HttpMiddleware
 import zhttp.service._
-import zio.{ App, ExitCode, URIO, ZIO }
+import zio.{ Clock, ExitCode, URIO, ZIO, ZIOAppDefault }
 
-object Main extends App {
-  private val appEnv = DatabaseProvider.live ++ Log.live
-  private val env = ServerChannelFactory.auto ++ ChannelFactory.auto ++ EventLoopGroup
-    .auto() ++ appEnv
-  private val server =
-    Server.port(9000) ++              // Setup port
-      Server.paranoidLeakDetection ++ // Paranoid leak detection (affects performance)
-      Server.app(
-        CORS(Logger <<< (Routes.public +++ Routes.publicM +++ (Auth <<< Routes.authed))),
-      )
+import java.net.InetAddress
 
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
-    server.make
-      .use(_ => ZIO.never)
-      .provideCustomLayer(env)
-      .exitCode
+object Main extends ZIOAppDefault {
+  private val middlewares = myDebug ++ Middleware.cors()
+
+  def myDebug: HttpMiddleware[Any, Nothing] =
+    interceptZIOPatch(req => Clock.nanoTime.map(start => (req.method, req.url, start))) {
+      case (response, (method, url, start)) =>
+        for {
+          end <- Clock.nanoTime
+          _ <- ZIO
+                 .log(s"${response.status.code} $method ${url.encode} ${(end - start) / 1000000}ms")
+        } yield Patch.empty
+    }
+
+  def authMiddleware: HttpMiddleware[Any, Throwable] = Middleware.bearerAuthZIO { token =>
+    ZIO.fromTry(jwtDecode(token)) *> ZIO.succeed(true)
+  }
+
+  private val authedApp = Routes.authed @@ authMiddleware
+  private val pubApp    = Routes.public
+  private val app       = (pubApp ++ authedApp) @@ middlewares
+
+  private val env = Database.live ++ Config.live
+
+  override def run: URIO[Any, ExitCode] = {
+    val server = for {
+      config <- ZIO.service[AppConfig]
+      _      <- ZIO.logInfo(s"Starting server on ${config.host}:${config.port}")
+      res    <- Server.start(InetAddress.getByName(config.host), config.port, app)
+    } yield res
+
+    server.provideLayer(env).exitCode
+  }
 }
