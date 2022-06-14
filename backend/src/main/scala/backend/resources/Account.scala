@@ -1,6 +1,6 @@
 package backend.resources
 
-import backend.Security._
+import backend.Security
 import common.Protocol._
 import kuzminki.api._
 import kuzminki.sorting.Sorting
@@ -34,23 +34,27 @@ object Accounts extends Resource[Accounts] {
         body <- req.bodyAsString
         loginRequest <-
           ZIO.fromEither(body.fromJson[SigninRequest]).tapError(ZIO.logError(_)).mapError(e => RequestParseError(e))
+        passwordHashed <- Security.toHexString(loginRequest.password)
         accOpt <-
           sql
             .select(items)
             .colsType(_.itemPublic)
-            .where(acc => Seq(acc.username === loginRequest.username, acc.password === loginRequest.password.toHexHash))
+            .where(acc => Seq(acc.username === loginRequest.username, acc.password === passwordHashed))
             .runHeadOpt
-        acc <- ZIO.fromOption(accOpt).mapError(_ => new Throwable("not found"))
-      } yield Response.json(jwtEncode(acc.username))
+        acc     <- ZIO.fromOption(accOpt).mapError(_ => new Throwable("not found"))
+        encoded <- Security.jwtEncode(acc.username)
+      } yield Response.json(encoded)
+
     case req @ Method.POST -> !! / "signup" =>
       for {
-        body          <- req.bodyAsString
-        signupRequest <- ZIO.fromEither(body.fromJson[SignupRequest]).mapError(RequestParseError.apply)
+        body           <- req.bodyAsString
+        signupRequest  <- ZIO.fromEither(body.fromJson[SignupRequest]).mapError(RequestParseError.apply)
+        passwordHashed <- Security.toHexString(signupRequest.password)
         res <- sql
                  .insert(items)
                  .cols2(acc => (acc.username, acc.password))
                  .returningType(_.itemPublic)
-                 .runHead((signupRequest.username, signupRequest.password.toHexHash))
+                 .runHead((signupRequest.username, passwordHashed))
       } yield Response.json(res.toJson)
   }
 }

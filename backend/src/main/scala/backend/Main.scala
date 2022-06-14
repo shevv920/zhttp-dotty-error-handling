@@ -22,8 +22,8 @@ object Main extends ZIOAppDefault {
         } yield Patch.empty
     }
 
-  def authMiddleware: HttpMiddleware[Any, Throwable] = Middleware.bearerAuthZIO { token =>
-    ZIO.fromTry(jwtDecode(token)) *> ZIO.succeed(true)
+  def authMiddleware: HttpMiddleware[AppConfig, Throwable] = Middleware.bearerAuthZIO { token =>
+    jwtDecode(token) *> ZIO.succeed(true)
   }
 
   private val authedApp = Routes.authed @@ authMiddleware

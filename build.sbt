@@ -8,7 +8,7 @@ lazy val backend = project
   .settings(
     ThisBuild / scalaVersion := "2.13.8",
     libraryDependencies ++= Seq(
-      "org.postgresql"        % "postgresql"          % "42.3.4",
+      "org.postgresql"        % "postgresql"          % "42.3.6",
       "kuzminki-zio-2"        % "kuzminki-zio-2_2.13" % "0.9.2-uuid3-zio2-rc6",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
