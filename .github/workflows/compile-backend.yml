@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: add git config
+    - name: Add git config
       run: |
           echo $GH_CONFIG_FILE >> ~/.gitconfig
       shell: bash
@@ -26,5 +26,5 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: 'sbt'
-    - name: Run tests
+    - name: Compile
       run: sbt backend/compile
