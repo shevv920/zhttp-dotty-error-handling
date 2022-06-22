@@ -2,14 +2,18 @@ val zioVersion   = "2.0.0-RC6"
 val zhttpVersion = "2.0.0-RC9"
 val zioConfig    = "3.0.0-RC9"
 
+githubTokenSource := TokenSource.GitConfig("github.token")
+
 lazy val backend = project
   .in(file("./backend"))
   .dependsOn(common.jvm)
   .settings(
+    resolvers += Resolver.githubPackages("shevv920", "kuzminki-zio-2"),
     ThisBuild / scalaVersion := "2.13.8",
+    githubTokenSource        := TokenSource.GitConfig("github.token"),
     libraryDependencies ++= Seq(
       "org.postgresql"        % "postgresql"          % "42.3.6",
-      "kuzminki-zio-2"        % "kuzminki-zio-2_2.13" % "0.9.2-uuid3-zio2-rc6",
+      "shevv920"             %% "kuzminki-zio-2-fork" % "0.9.2",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
       "io.github.nremond"     % "pbkdf2-scala_2.13"   % "0.6.5",
@@ -26,12 +30,14 @@ lazy val backend = project
     ),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
   )
+  .enablePlugins(PackPlugin)
 
 lazy val frontend = project
   .in(file("./frontend"))
   .dependsOn(common.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(
+    githubTokenSource := TokenSource.GitConfig("github.token"),
     libraryDependencies ++= Seq(
       "com.raquo"                    %%% "laminar"  % "0.14.2",
       "com.raquo"                    %%% "waypoint" % "0.5.0",
@@ -47,7 +53,8 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("./common"))
   .settings(
-    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC7"
+    githubTokenSource                := TokenSource.GitConfig("github.token"),
+    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC7",
   )
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")

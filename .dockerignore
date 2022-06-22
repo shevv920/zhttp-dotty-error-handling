@@ -1,0 +1,11 @@
+*.log
+**/.idea/
+**/.vscode/
+**/.bsp/
+**/.metals/
+**/project/target/
+**/project/project/
+**/target/
+**/.bloop/
+**/metals.sbt
+*.sc

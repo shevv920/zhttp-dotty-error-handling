@@ -42,13 +42,16 @@ services:
     depends_on:
       - postgres
     environment:
-      - APP_HOST=localhost
+      - APP_HOST=0.0.0.0
       - APP_PORT=9000
       - DATABASE_PORT=5432
       - DATABASE_HOST=postgres
       - DATABASE_USER=postgres
       - DATABASE_NAME=postgres
       - DATABASE_PASSWORD=dbpassword
+      - PWD_SK=SOME_SECRET_KEY_FOR_LOCAL_PASSWORDS
+      - PWD_SALT=SOME_SALT_TO_USE_ON_THIS_ENV
+      - GH_PACKAGES_READ_TOKEN=ga
     volumes:
       - ./backend/src:/app/backend/src
       - ./backend/target/scala-2.13/src_managed:/app/backend/target/scala-2.13/src_managed
