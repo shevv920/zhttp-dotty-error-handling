@@ -1,4 +1,4 @@
-val zioVersion   = "2.0.0-RC6"
+val zioVersion   = "2.0.0"
 val zhttpVersion = "2.0.0-RC9"
 val zioConfig    = "3.0.0-RC9"
 
@@ -13,7 +13,7 @@ lazy val backend = project
     githubTokenSource        := TokenSource.GitConfig("github.token"),
     libraryDependencies ++= Seq(
       "org.postgresql"        % "postgresql"          % "42.3.6",
-      "shevv920"             %% "kuzminki-zio-2-fork" % "0.9.2",
+      "shevv920"             %% "kuzminki-zio-2-fork" % "0.9.3",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
       "io.github.nremond"     % "pbkdf2-scala_2.13"   % "0.6.5",
