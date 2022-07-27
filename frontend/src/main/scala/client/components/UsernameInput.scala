@@ -3,11 +3,13 @@ package client.components
 import com.raquo.laminar.api.L._
 
 import scala.language.postfixOps
+import com.raquo.laminar.nodes.ReactiveHtmlElement
+import org.scalajs.dom.HTMLElement
 
-class UsernameInput {
-  val inputId  = "username-input"
-  val inputVar = Var("")
-  val inputElem = input(
+class UsernameInput extends CustomComponent {
+  val inputId               = "username-input"
+  val inputVar: Var[String] = Var("")
+  val inputElem: ReactiveHtmlElement[org.scalajs.dom.html.Input] = input(
     name   := "username",
     idAttr := inputId,
     typ    := "text",
@@ -15,34 +17,28 @@ class UsernameInput {
       value <-- inputVar,
       onInput.mapToValue --> inputVar,
     ),
-    className := UsernameInput.valid.htmlClass,
   )
-  val labelElem = label(
+
+  val labelElem: ReactiveHtmlElement[org.scalajs.dom.html.Label] = label(
     forId := inputId,
     "Username",
   )
-  val elem = Seq(
+  import client.styles.given
+  override val elem = div(
+    UsernameInput.Styles.wrapper,
     labelElem,
     inputElem,
   )
 }
 
-import scalacss.DevDefaults._
-object UsernameInput extends StyleSheet.Inline {
-  import dsl._
+object UsernameInput {
+  import scalacss.DevDefaults.*
+  object Styles extends StyleSheet.Inline {
+    import dsl.*
 
-  val common = mixin(
-    borderRadius(0 px),
-    border(1 px, solid, black),
-    outline.none,
-  )
-
-  val invalid = style(
-    common,
-    border(1 px, solid, red),
-  )
-
-  val valid = style(
-    common
-  )
+    val wrapper = style(
+      display.flex,
+      flexDirection.column,
+    )
+  }
 }

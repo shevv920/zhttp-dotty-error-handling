@@ -1,7 +1,9 @@
-package backend
+package backend.routes
 
-import backend.resources.{ Accounts, Fruits }
-import zhttp.http._
+import zhttp.*
+import zhttp.http.*
+
+import backend.routes.*
 
 object Routes {
   private val health: Http[Any, Nothing, Request, Response] = Http.collect { case Method.GET -> !! / "health" =>
@@ -11,7 +13,7 @@ object Routes {
   val public = Http.collectHttp[Request] {
     case _ -> !! / "health" =>
       health
-    case _ -> "accounts" /: path =>
+    case _ -> "" /: "accounts" /: path =>
       Accounts.public.setPath(path)
   }
 

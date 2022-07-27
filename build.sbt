@@ -1,32 +1,38 @@
-val zioVersion   = "2.0.0"
-val zhttpVersion = "2.0.0-RC9"
-val zioConfig    = "3.0.0-RC9"
+val zioVersion      = "2.0.0"
+val zhttpVersion    = "2.0.0-RC10"
+val zioConfig       = "3.0.1"
+val zioJsonVersion  = "0.3.0-RC10"
+val laminextVersion = "0.14.3"
 
-githubTokenSource := TokenSource.GitConfig("github.token")
+ThisBuild / scalaVersion := "3.1.3"
+ThisBuild / scalacOptions ++= Seq(
+  "-feature",
+  "-Xfatal-warnings",
+  "-deprecation",
+  "-unchecked",
+  "-language:implicitConversions",
+)
 
 lazy val backend = project
   .in(file("./backend"))
   .dependsOn(common.jvm)
   .settings(
-    resolvers += Resolver.githubPackages("shevv920", "kuzminki-zio-2"),
-    ThisBuild / scalaVersion := "2.13.8",
-    githubTokenSource        := TokenSource.GitConfig("github.token"),
+    resolvers +=
+      "Sonatype OSS Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
       "org.postgresql"        % "postgresql"          % "42.3.6",
-      "shevv920"             %% "kuzminki-zio-2-fork" % "0.9.3",
       "org.slf4j"             % "slf4j-nop"           % "1.7.36",
-      "com.github.jwt-scala" %% "jwt-core"            % "9.0.5",
-      "io.github.nremond"     % "pbkdf2-scala_2.13"   % "0.6.5",
+      "com.github.jwt-scala" %% "jwt-core"            % "9.0.6",
+      "io.github.nremond"    %% "pbkdf2-scala"        % "0.7.0",
       "io.d11"               %% "zhttp"               % zhttpVersion,
+      "io.getquill"          %% "quill-jdbc-zio"      % "4.1.0-V2",
       "dev.zio"              %% "zio-config"          % zioConfig,
       "dev.zio"              %% "zio-config-magnolia" % zioConfig,
-      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC14",
+      "dev.zio"              %% "zio-prelude"         % "1.0.0-RC15",
       "dev.zio"              %% "zio"                 % zioVersion,
-      "dev.zio"              %% "zio-test"            % zioVersion   % Test,
-      "dev.zio"              %% "zio-test-sbt"        % zioVersion   % Test,
-      "dev.zio"              %% "zio-test-junit"      % zioVersion   % Test,
-      "dev.zio"              %% "zio-test-magnolia"   % zioVersion   % Test,
-      "io.d11"               %% "zhttp-test"          % zhttpVersion % Test,
+      "dev.zio"              %% "zio-test"            % zioVersion % Test,
+      "dev.zio"              %% "zio-test-sbt"        % zioVersion % Test,
+      "dev.zio"              %% "zio-test-magnolia"   % zioVersion % Test,
     ),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
   )
@@ -37,14 +43,15 @@ lazy val frontend = project
   .dependsOn(common.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(
-    githubTokenSource := TokenSource.GitConfig("github.token"),
+    ThisBuild / scalaVersion := "3.1.3",
     libraryDependencies ++= Seq(
-      "com.raquo"                    %%% "laminar"  % "0.14.2",
-      "com.raquo"                    %%% "waypoint" % "0.5.0",
-      "com.lihaoyi"                  %%% "upickle"  % "1.4.2",
-      "dev.zio"                      %%% "zio-json" % "0.3.0-RC7",
-      "io.laminext"                  %%% "fetch"    % "0.14.3",
-      "com.github.japgolly.scalacss" %%% "core"     % "1.0.0",
+      "com.raquo"                    %%% "laminar"         % "0.14.2",
+      "com.raquo"                    %%% "waypoint"        % "0.5.0",
+      "dev.zio"                      %%% "zio-json"        % zioJsonVersion,
+      "io.laminext"                  %%% "fetch"           % laminextVersion,
+      "io.laminext"                  %%% "validation-core" % laminextVersion,
+      "io.laminext"                  %%% "ui"              % laminextVersion,
+      "com.github.japgolly.scalacss" %%% "core"            % "1.0.0",
     ),
     scalaJSUseMainModuleInitializer := true,
   )
@@ -53,8 +60,9 @@ lazy val common = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("./common"))
   .settings(
-    githubTokenSource                := TokenSource.GitConfig("github.token"),
-    libraryDependencies += "dev.zio" %% "zio-json" % "0.3.0-RC7",
+    libraryDependencies ++= Seq(
+      "dev.zio" %% "zio-json" % zioJsonVersion
+    )
   )
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")
@@ -78,6 +86,6 @@ fastOptCompileCopy := {
   )
   IO.copyFile(
     sourceMap,
-    source.getParentFile / "with-html" / s"script-dev-$hash.js.map",
+    source.getParentFile / "with-html" / s"frontend-fastopt.js.map",
   )
 }

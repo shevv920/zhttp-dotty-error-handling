@@ -1,9 +1,10 @@
 package backend
 
 import zio.ZIO
-import zio.config._
+import zio.config.*
 import zio.config.derivation.name
-import zio.config.magnolia.Descriptor.descriptor
+import zio.ZLayer
+import zio.config.magnolia.descriptor
 
 final case class AppConfig(
     @name("APP_HOST") host: String,
@@ -15,18 +16,18 @@ final case class AppConfig(
 object Config {
   private val configDescriptor = descriptor[AppConfig]
 
-  val live = ZConfig
+  val live: ZLayer[Any, ReadError[String], AppConfig] = ZConfig
     .fromSystemEnv(configDescriptor)
     .orElse(
       ZConfig.fromMap(
         Map(
-          "APP_HOST" -> "localhost",
-          "APP_PORT" -> "9000",
-          "PWD_SK"   -> "PASSWORD_SECRET_KEY",
-          "PWD_SALT" -> "SALT_SALT_SALT",
+          "host"         -> "localhost",
+          "port"         -> "9000",
+          "pwdSecretKey" -> "PASSWORD_SECRET_KEY",
+          "pwdSalt"      -> "SALT_SALT_SALT",
         ),
         configDescriptor,
       )
     )
-    .tapError(err => ZIO.logInfo(s"$err"))
+    .tapError(err => ZIO.logError(s"Config load error: $err"))
 }
