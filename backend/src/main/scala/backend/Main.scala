@@ -4,7 +4,7 @@ import backend.Security.jwtDecode
 import backend.repositories.{ AccountRepo, FruitRepoLive }
 import backend.routes.Routes
 import common.Protocol.{ RequestError, RequestParseError }
-import io.getquill.context.ZioJdbc.DataSourceLayer
+import io.getquill.jdbczio.Quill
 import zhttp.http.Middleware.interceptZIOPatch
 import zhttp.http.*
 import zhttp.http.middleware.HttpMiddleware
@@ -35,7 +35,8 @@ object Main extends ZIOAppDefault {
   private val pubApp    = Routes.public
   private val app       = (pubApp ++ authedApp) @@ middlewares
 
-  val dataSourceLayer = DataSourceLayer.fromPrefix("myDatabaseConfig")
+  val dataSourceLayer = Quill.DataSource.fromPrefix("myDatabaseConfig")
+  val postgresLive    = Quill.Postgres.fromNamingStrategy(io.getquill.SnakeCase)
 
   override def run: URIO[Any, ExitCode] = {
     val server =
@@ -47,7 +48,7 @@ object Main extends ZIOAppDefault {
       yield server
 
     server
-      .provide(Config.live, dataSourceLayer, FruitRepoLive.live, AccountRepo.live)
+      .provide(Config.live, postgresLive, dataSourceLayer, FruitRepoLive.live, AccountRepo.live)
       .exitCode
   }
 }

@@ -27,7 +27,7 @@ object Security {
 
   def hashPassword(pwd: Password): ZIO[AppConfig, Nothing, String] =
     for salt <- ZIO.serviceWith[AppConfig](_.pwdSalt)
-    yield toHex(PBKDF2(pwd.value.getBytes, salt.getBytes))
+    yield toHex(PBKDF2(pwd.getBytes, salt.getBytes))
 
   def toHexString(value: String): ZIO[AppConfig, Nothing, String] =
     for salt <- ZIO.serviceWith[AppConfig](_.pwdSalt)

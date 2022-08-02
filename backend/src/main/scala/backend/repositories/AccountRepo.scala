@@ -1,6 +1,7 @@
 package backend.repositories
 
 import common.Protocol.{ AccountPublic, Password, SignupRequest }
+import io.getquill.jdbczio.Quill
 import zio.{ ZIO, ZLayer }
 
 import java.sql.SQLException
@@ -34,16 +35,14 @@ object AccountRepo {
   def insertSignup(signupRequest: SignupRequest): ZIO[AccountRepo, SQLException, AccountPublic] =
     ZIO.serviceWithZIO[AccountRepo](_.insertSignup(signupRequest))
 
-  val live: ZLayer[DataSource, Throwable, AccountRepo] =
+  val live =
     ZLayer
       .fromFunction(AccountRepoLive.apply _)
 }
 
-final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {
-  import QuillContext.*
-  import io.getquill.*
-
-  val env: ULayer[DataSource] = ZLayer.succeed(dataSource)
+final case class AccountRepoLive(quill: Quill.Postgres[io.getquill.SnakeCase]) extends AccountRepo {
+  import io.getquill._
+  import quill.*
 
   inline def accounts: Quoted[EntityQuery[Account]] =
     quote {
@@ -53,7 +52,6 @@ final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {
   override def getById(id: UUID): ZIO[Any, SQLException, Option[AccountPublic]] =
     run(accounts.filter(acc => acc.id == lift(id)).map(acc => AccountPublic(acc.id, acc.username)))
       .map(_.headOption)
-      .provide(env)
 
   override def getByUsernameAndPassword(
       userName: String,
@@ -66,7 +64,7 @@ final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {
           .map(acc => AccountPublic(acc.id, acc.username))
       }
 
-    run(q).map(_.headOption).provide(env)
+    run(q).map(_.headOption)
   }
 
   def usernameExists(userName: String) = {
@@ -75,7 +73,7 @@ final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {
         accounts.filter(acc => acc.username == lift(userName)).map(_.username).nonEmpty
       }
 
-    run(q).provide(env)
+    run(q)
   }
 
   def insertSignup(signupRequest: SignupRequest) = {
@@ -86,6 +84,6 @@ final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {
           .returning(acc => AccountPublic(acc.id, acc.username))
       }
 
-    run(q).provide(env)
+    run(q)
   }
 }

@@ -8,7 +8,16 @@ import scala.deriving.Mirror
 object Protocol {
   inline given [T: Mirror.Of]: JsonCodec[T] = DeriveJsonCodec.gen[T]
   final case class Fruit(id: UUID, name: String)
-  final case class Password(value: String)
+
+  opaque type Password = String
+  object Password:
+    def apply(s: String): Password = s
+    inline given JsonCodec[Password] =
+      JsonCodec[Password](JsonEncoder[String].contramap(_.toString), JsonDecoder[String].map(Password(_)))
+  extension (p: Password)
+    def getBytes      = p.getBytes
+    def value: String = p
+
   final case class SigninRequest(username: String, password: Password)
   final case class SignupRequest(username: String, password: Password)
   final case class CreateFruitRequest(name: String)

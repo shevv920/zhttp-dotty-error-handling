@@ -2,12 +2,11 @@ package backend.repositories
 
 import io.getquill.context.ZioJdbc.DataSourceLayer
 import io.getquill.{ PostgresZioJdbcContext, SnakeCase }
+import io.getquill.jdbczio.Quill
 import zio.prelude.Assertion.greaterThanOrEqualTo
 import zio.prelude.Subtype
 
-object QuillContext extends PostgresZioJdbcContext(SnakeCase)
-
-trait Resource {
+trait Resource:
   import Resource._
 
   type Limit = Limit.Type
@@ -16,15 +15,9 @@ trait Resource {
   lazy val defaultLimit: Limit = Limit(10)
   lazy val defaultPage: Page   = Page(1)
 
-}
-
-object Resource {
-
-  object Limit extends Subtype[Int] {
+object Resource:
+  object Limit extends Subtype[Int]:
     override inline def assertion = greaterThanOrEqualTo(0)
-  }
 
-  object Page extends Subtype[Int] {
+  object Page extends Subtype[Int]:
     override inline def assertion = greaterThanOrEqualTo(1)
-  }
-}

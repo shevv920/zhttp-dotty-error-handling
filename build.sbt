@@ -26,7 +26,7 @@ lazy val backend = project
       "com.github.jwt-scala" %% "jwt-core"            % "9.0.6",
       "io.github.nremond"    %% "pbkdf2-scala"        % "0.7.0",
       "io.d11"               %% "zhttp"               % zhttpVersion,
-      "io.getquill"          %% "quill-jdbc-zio"      % "4.1.0-V2",
+      "io.getquill"          %% "quill-jdbc-zio"      % "4.2.0",
       "dev.zio"              %% "zio-config"          % zioConfig,
       "dev.zio"              %% "zio-config-magnolia" % zioConfig,
       "dev.zio"              %% "zio-prelude"         % "1.0.0-RC15",

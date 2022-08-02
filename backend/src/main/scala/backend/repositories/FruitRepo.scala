@@ -2,6 +2,7 @@ package backend.repositories
 
 import common.Protocol.{ CreateFruitRequest, Fruit, RequestParseError }
 import io.getquill.context.ZioJdbc.DataSourceLayer
+import io.getquill.jdbczio.Quill
 import zhttp.http.{ uuid as uuidPath, * }
 import zio.{ ULayer, ZIO, ZLayer }
 
@@ -33,26 +34,24 @@ object FruitRepo extends Resource {
 
 }
 
-final case class FruitRepoLive(dataSource: DataSource) extends FruitRepo {
-  import QuillContext.*
-  import io.getquill.*
+final case class FruitRepoLive(quill: Quill.Postgres[io.getquill.SnakeCase]) extends FruitRepo {
+  import io.getquill._
+  import quill.*
 
   inline def fruits =
     quote {
       querySchema[Fruit]("fruits")
     }
 
-  val env = ZLayer.succeed(dataSource)
-
   override def get(page: Page, limit: Limit): ZIO[Any, SQLException, List[Fruit]] =
-    run(quote(fruits.drop(lift((page - 1) * limit)).take(lift(limit.toInt)))).provide(env)
+    run(quote(fruits.drop(lift((page - 1) * limit)).take(lift(limit.toInt))))
 
   override def getById(id: UUID): ZIO[Any, SQLException, Option[Fruit]] =
-    run(quote(fruits.filter(fr => fr.id == lift(id)))).map(_.headOption).provide(env)
+    run(quote(fruits.filter(fr => fr.id == lift(id)))).map(_.headOption)
 
   override def insert(createFruitRequest: CreateFruitRequest): ZIO[Any, SQLException, Long] =
-    run(quote(fruits.insert(_.name -> lift(createFruitRequest.name)))).provide(env)
+    run(quote(fruits.insert(_.name -> lift(createFruitRequest.name))))
 }
 
 object FruitRepoLive:
-  val live: ZLayer[DataSource, Throwable, FruitRepo] = ZLayer.fromFunction(FruitRepoLive.apply _)
+  val live = ZLayer.fromFunction(FruitRepoLive.apply _)
