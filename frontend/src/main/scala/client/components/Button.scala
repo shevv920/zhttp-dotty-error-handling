@@ -1,5 +1,6 @@
 package client.components
 
+import com.raquo.domtypes.generic.codecs.StringAsIsCodec
 import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import scalacss.internal.StyleA

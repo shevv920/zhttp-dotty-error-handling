@@ -17,6 +17,7 @@ lazy val backend = project
   .in(file("./backend"))
   .dependsOn(common.jvm)
   .settings(
+    scalaVersion := "3.1.3",
     resolvers +=
       "Sonatype OSS Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
@@ -43,7 +44,6 @@ lazy val frontend = project
   .dependsOn(common.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(
-    ThisBuild / scalaVersion := "3.1.3",
     libraryDependencies ++= Seq(
       "com.raquo"                    %%% "laminar"         % "0.14.2",
       "com.raquo"                    %%% "waypoint"        % "0.5.0",

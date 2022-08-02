@@ -14,7 +14,7 @@ object Signin {
   import scalacss.DevDefaults.*
   object Styles extends StyleSheet.Inline {
     import dsl.*
-    
+
     val wrapper = style(
       display.flex,
       flexDirection.column,

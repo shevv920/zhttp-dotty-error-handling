@@ -52,9 +52,7 @@ final case class FruitRepoLive(dataSource: DataSource) extends FruitRepo {
 
   override def insert(createFruitRequest: CreateFruitRequest): ZIO[Any, SQLException, Long] =
     run(quote(fruits.insert(_.name -> lift(createFruitRequest.name)))).provide(env)
-
 }
 
-object FruitRepoLive {
+object FruitRepoLive:
   val live: ZLayer[DataSource, Throwable, FruitRepo] = ZLayer.fromFunction(FruitRepoLive.apply _)
-}

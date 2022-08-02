@@ -37,7 +37,6 @@ object AccountRepo {
   val live: ZLayer[DataSource, Throwable, AccountRepo] =
     ZLayer
       .fromFunction(AccountRepoLive.apply _)
-      .tapError(_ => ZIO.logError("acc rep"))
 }
 
 final case class AccountRepoLive(dataSource: DataSource) extends AccountRepo {

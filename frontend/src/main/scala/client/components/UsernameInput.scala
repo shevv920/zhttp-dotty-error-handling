@@ -9,6 +9,7 @@ import org.scalajs.dom.HTMLElement
 class UsernameInput extends CustomComponent {
   val inputId               = "username-input"
   val inputVar: Var[String] = Var("")
+  val labelTextVar          = Var("Username")
   val inputElem: ReactiveHtmlElement[org.scalajs.dom.html.Input] = input(
     name   := "username",
     idAttr := inputId,
@@ -21,7 +22,7 @@ class UsernameInput extends CustomComponent {
 
   val labelElem: ReactiveHtmlElement[org.scalajs.dom.html.Label] = label(
     forId := inputId,
-    "Username",
+    child.text <-- labelTextVar,
   )
   import client.styles.given
   override val elem = div(

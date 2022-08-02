@@ -1,8 +1,9 @@
 package client
 
-import com.raquo.laminar.api.L._
+import com.raquo.domtypes.generic.codecs.{ Codec, StringAsIsCodec }
+import com.raquo.laminar.api.L.*
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import com.raquo.waypoint._
+import com.raquo.waypoint.*
 import org.scalajs.dom.html.Element
 import org.scalajs.dom
 import zio.json.*
